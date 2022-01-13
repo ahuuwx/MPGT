@@ -30,5 +30,5 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "receiver_username")
-    private User receiverUsername;
+    private Account receiverUsername;
 }

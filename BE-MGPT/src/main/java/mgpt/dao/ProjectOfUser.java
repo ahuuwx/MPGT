@@ -20,7 +20,7 @@ public class ProjectOfUser {
 
     @ManyToMany
     @JoinColumn(name = "username")
-    private List<User> username;
+    private List<Account> username;
 
     @ManyToOne
     @JoinColumn(name = "project_id")

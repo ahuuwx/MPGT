@@ -25,7 +25,7 @@ public class Project {
     @Column(name="end_date")
     private Date endDate;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     @JsonIgnore
     private List<Sprint> sprintList;
 

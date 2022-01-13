@@ -22,11 +22,11 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "creator_username")
-    private User creatorUsername;
+    private Account creatorUsername;
 
     @ManyToOne
     @JoinColumn(name = "assignee_username")
-    private User assigneeUsername;
+    private Account assigneeUsername;
 
     @Column(name = "create_date")
     private Date createDate;
@@ -34,10 +34,10 @@ public class Task {
     private Date updateDate;
 
     @OneToOne
-    @Column(name = "status_id")
+    @JoinColumn(name = "status_id")
     private TaskStatus statusId;
     @ManyToOne
-    @Column(name = "sprint_id")
+    @JoinColumn(name = "sprint_id")
     private Sprint sprintId;
 
 

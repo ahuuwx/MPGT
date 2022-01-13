@@ -5,14 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "account")
+public class Account implements Serializable {
     @Id
     @Column(name = "username")
     private String username;
@@ -27,9 +28,9 @@ public class User {
     @Column(name = "token_notification")
     private String tokenNotification;
 
-    @OneToMany(mappedBy = "username")
+    @OneToMany(mappedBy = "creatorUsername")
     private List<Task> taskList;
-    @OneToMany(mappedBy = "username")
+    @OneToMany(mappedBy = "receiverUsername")
     private List<Notification> notificationList;
     @ManyToMany(mappedBy = "username")
     private List<ProjectOfUser> projectOfUserList;
