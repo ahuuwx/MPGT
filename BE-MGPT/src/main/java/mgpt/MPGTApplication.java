@@ -16,11 +16,5 @@ public class MPGTApplication {
     public static void main(String[] args) throws IOException {
         SpringApplication.run(MPGTApplication.class, args);
     }
-    @Configuration
-    public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring().antMatchers("/**");
-        }
-    }
+
 }

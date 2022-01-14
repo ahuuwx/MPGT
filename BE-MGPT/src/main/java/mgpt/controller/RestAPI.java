@@ -47,5 +47,23 @@ public class RestAPI {
         return accountService.checkLogin(loginRequestDto);
     }
     //</editor-fold>
+    /**
+    * -------------------------------PROFILE--------------------------------
+    */
 
+    //<editor-fold desc="get profile">
+    /**
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     * @apiNote get profile
+     * @author HuuNt - 2022.01.14
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/get-profile", method = RequestMethod.GET)
+    public ResponseEntity<?> getProfileByUsername(@RequestParam(value = "username") String username) throws Exception {
+        return accountService.getProfileByUsername(username);
+    }
+    //</editor-fold>
 }
