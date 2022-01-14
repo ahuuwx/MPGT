@@ -20,9 +20,9 @@ public class Project {
     private int projectId;
     @Column(name = "project_name")
     private String projectName;
-    @Column(name="start_date")
+    @Column(name = "start_date")
     private Date startDate;
-    @Column(name="end_date")
+    @Column(name = "end_date")
     private Date endDate;
 
     @OneToMany(mappedBy = "projectId")

@@ -1,7 +1,6 @@
 package mgpt.controller;
 
 import mgpt.model.LoginRequestDto;
-import mgpt.model.LoginResponseDto;
 import mgpt.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 
 @RestController
 @EnableScheduling
@@ -18,6 +16,7 @@ public class RestAPI {
     @Autowired
     AccountService accountService;
     //<editor-fold desc="Welcome Page">
+
     /**
      * @return welcome page
      * @apiNote welcome page

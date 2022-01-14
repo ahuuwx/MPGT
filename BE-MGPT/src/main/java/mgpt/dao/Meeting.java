@@ -20,9 +20,9 @@ public class Meeting {
     private String meeting_link;
     @Column(name = "meeting_date")
     private Date meetingDate;
-    @Column(name="note")
+    @Column(name = "note")
     private String note;
-    @Column(name="meeting_time")
+    @Column(name = "meeting_time")
     private int meetingTime;
 
     @ManyToOne

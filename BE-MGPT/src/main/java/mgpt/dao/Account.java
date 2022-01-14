@@ -34,8 +34,8 @@ public class Account implements Serializable {
     private List<Notification> notificationList;
     @ManyToMany(mappedBy = "username")
     private List<ProjectOfUser> projectOfUserList;
-    @ManyToMany(mappedBy = "username")
-    private List<RoleOfUser> roleOfUserList;
+    @OneToOne(mappedBy = "account")
+    private RoleOfUser roleOfUser;
 
 
 }
