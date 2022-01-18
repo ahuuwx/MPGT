@@ -9,5 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface ProjectOfUserRepository extends JpaRepository<ProjectOfUser, Integer> {
-    List<ProjectOfUser> findProjectOfUserByUsername(Account account);
+    ProjectOfUser findProjectOfUserByUsername(Account account);
+
+    List<ProjectOfUser> findProjectOfUserByUsername_Username(String username);
+
+
 }

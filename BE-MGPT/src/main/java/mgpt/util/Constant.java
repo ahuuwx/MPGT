@@ -8,4 +8,22 @@ public class Constant {
     public static final String STRING_AUTHORIZATION = "Authorization";
     public static final String URL_LOGIN = "/login";
     public static final String URL_GET_PROFILE = "/get-profile**";
+
+    /**
+     * ROLE
+     */
+    public static final int LECTURER_ROLE_ID = 2;
+    public static final int ADMIN_ROLE_ID = 1;
+    public static final int PDT_ROLE_ID = 3;
+    public static final int MEMBER_ROLE_ID = 4;
+    public static final int LEADER_ROLE_ID = 5;
+    public static final String LECTURER_ROLE_NAME = "Lecturer";
+    public static final String ADMIN_ROLE_NAME = "Admin";
+    public static final String PDT_ROLE_NAME = "PDT";
+    public static final String MEMBER_ROLE_NAME = "Member";
+    public static final String LEADER_ROLE_NAME = "Leader";
+    /**
+     * ACCOUNT
+     */
+    public static final String INVALID_USERNAME = "INVALID USERNAME";
 }

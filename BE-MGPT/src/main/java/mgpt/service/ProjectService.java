@@ -7,16 +7,16 @@ import mgpt.model.ProjectListResponseDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.ProjectOfUserRepository;
 import mgpt.repository.ProjectRepository;
+import mgpt.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ProjectService {
@@ -26,23 +26,71 @@ public class ProjectService {
     AccountRepository accountRepository;
     @Autowired
     ProjectOfUserRepository projectOfUserRepository;
-    public ResponseEntity<?> getProjectsByUsername(String username){
+
+    public ResponseEntity<?> getProjectsByUsername(String username) {
         try {
-            Account account=accountRepository.findAccountByUsername(username) ;
+            Account account = accountRepository.findAccountByUsername(username);
+            if(account != null) {
+                /**
+                 * ROLE: MEMBER
+                 */
+                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.MEMBER_ROLE_NAME)) {
+                    ProjectOfUser projectOfUser = projectOfUserRepository.findProjectOfUserByUsername(account);
+                    Project project = projectRepository.findProjectByProjectOfUser_ProjectId(projectOfUser.getProject().getProjectId());
+                    ProjectListResponseDto projectListResponseDto = project.convertToProjectDto();
+                    Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    projectListResponseDto.setLeaderName(accountLeader.getName());
+                    List<String> lecturerName = new ArrayList<>();
+                    List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    for (Account accountLecturer : accountList) {
+                        lecturerName.add(accountLecturer.getName());
+                    }
+                    projectListResponseDto.setLecturerName(lecturerName);
+                    return ResponseEntity.ok(projectListResponseDto);
+                }
+                /**
+                 * ROLE: Leader
+                 */
+                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LEADER_ROLE_NAME)) {
+                    ProjectOfUser projectOfUser = projectOfUserRepository.findProjectOfUserByUsername(account);
+                    Project project = projectRepository.findProjectByProjectOfUser_ProjectId(projectOfUser.getProject().getProjectId());
+                    ProjectListResponseDto projectListResponseDto = project.convertToProjectDto();
+                    projectListResponseDto.setLeaderName(account.getName());
+                    List<String> lecturerName = new ArrayList<>();
+                    List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    for (Account accountLecturer : accountList) {
+                        lecturerName.add(accountLecturer.getName());
+                    }
+                    projectListResponseDto.setLecturerName(lecturerName);
+                    return ResponseEntity.ok(projectListResponseDto);
+                }
+                /**
+                 * ROLE: Lecturer
+                 */
+                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
+                    List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_Username(username);
+                    List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
+                    List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
+                    for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
+                        Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        projectListResponseDto1.setLeaderName(accountLeader.getName());
+                        List<String> lecturerName = new ArrayList<>();
+                        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        for (Account accountLecturer : accountList) {
+                            lecturerName.add(accountLecturer.getName());
+                        }
+                        projectListResponseDto1.setLecturerName(lecturerName);
+                    }
 
-            List<ProjectOfUser> projectOfUser=projectOfUserRepository.findProjectOfUserByUsername(account);
-            List<Project> projectList=projectRepository.findAllByProjectOfUserListIsIn(projectOfUser);
-            List<ProjectListResponseDto> projectListResponseDtos=projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
-            ProjectOfUser projectOfUser1=projectOfUser.get(0);
+                    return ResponseEntity.ok(projectListResponseDto);
+                }
+            }else {
+                throw new Exception(Constant.INVALID_USERNAME);
+            }
+            return ResponseEntity.ok("OK");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
-//            for (ProjectListResponseDto projectListResponseDto: projectListResponseDtos) {
-//                Account accountLeader=
-//                        accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_ProjectOfUserId(5, projectOfUser1.getProjectOfUserId());
-//                projectListResponseDto.setLeaderName(accountLeader.getName());
-//            }
-            return ResponseEntity.ok(projectListResponseDtos);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
 }

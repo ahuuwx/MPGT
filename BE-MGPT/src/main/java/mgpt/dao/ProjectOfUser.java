@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class ProjectOfUser {
     @Column(name = "id")
     private int projectOfUserId;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "username")
     private Account username;
 

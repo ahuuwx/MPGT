@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import mgpt.model.ProjectListResponseDto;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,16 +33,16 @@ public class Project {
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<Meeting> meetingList;
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-
     private List<ProjectOfUser> projectOfUserList;
-    // <editor-fold desc="Convert to ProjectDto">
+
+    // <editor-fold desc="Convert to ProjectDto"
     public ProjectListResponseDto convertToProjectDto() {
         ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto();
         projectListResponseDto.setProjectId(projectId);
         projectListResponseDto.setProjectName(projectName);
-        projectListResponseDto.setLeaderName("");
         return projectListResponseDto;
     }
     // </editor-fold>
