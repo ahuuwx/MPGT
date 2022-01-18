@@ -18,11 +18,16 @@ public class ProjectOfUser {
     @Column(name = "id")
     private int projectOfUserId;
 
-    @ManyToMany
+    @OneToOne
     @JoinColumn(name = "username")
-    private List<Account> username;
+    private Account username;
+
+
+
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+
 }

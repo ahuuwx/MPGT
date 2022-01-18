@@ -2,6 +2,7 @@ package mgpt.controller;
 
 import mgpt.model.LoginRequestDto;
 import mgpt.service.AccountService;
+import mgpt.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,6 +16,12 @@ public class RestAPI {
 
     @Autowired
     AccountService accountService;
+    @Autowired
+    ProjectService projectService;
+
+    /**
+     * -------------------------------WELCOME--------------------------------
+     */
     //<editor-fold desc="Welcome Page">
 
     /**
@@ -66,4 +73,12 @@ public class RestAPI {
         return accountService.getProfileByUsername(username);
     }
     //</editor-fold>
+    /**
+     * -------------------------------PROJECT--------------------------------
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/projects", method = RequestMethod.GET)
+    public ResponseEntity<?> getProjectsByUsername(@RequestParam(value = "username") String username) throws Exception {
+        return projectService.getProjectsByUsername(username);
+    }
 }

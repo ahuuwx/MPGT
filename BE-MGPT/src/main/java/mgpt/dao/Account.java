@@ -1,5 +1,6 @@
 package mgpt.dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,14 @@ public class Account implements Serializable {
     private List<Task> taskList;
     @OneToMany(mappedBy = "receiverUsername")
     private List<Notification> notificationList;
-    @ManyToMany(mappedBy = "username")
-    private List<ProjectOfUser> projectOfUserList;
+
+    @OneToOne(mappedBy = "username")
+    private ProjectOfUser projectOfUser;
+
     @OneToOne(mappedBy = "account")
     private RoleOfUser roleOfUser;
+
+
 
 
 }
