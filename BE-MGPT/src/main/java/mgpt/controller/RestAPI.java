@@ -3,6 +3,7 @@ package mgpt.controller;
 import mgpt.model.LoginRequestDto;
 import mgpt.service.AccountService;
 import mgpt.service.ProjectService;
+import mgpt.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -18,6 +19,8 @@ public class RestAPI {
     AccountService accountService;
     @Autowired
     ProjectService projectService;
+    @Autowired
+    SprintService sprintService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -58,7 +61,7 @@ public class RestAPI {
     * -------------------------------PROFILE--------------------------------
     */
 
-    //<editor-fold desc="get profile">
+    //<editor-fold desc="Get profile">
     /**
      *
      * @param username
@@ -102,6 +105,23 @@ public class RestAPI {
     @RequestMapping(value = "/project", method = RequestMethod.GET)
     public ResponseEntity<?> getProjectDetailByProjectId(@RequestParam(value = "projectId") int projectId) throws Exception {
         return projectService.getProjectDetailByProjectId(projectId);
+    }
+    //</editor-fold>
+    /**
+     * -------------------------------SPRINT--------------------------------
+     */
+
+    //<editor-fold desc="View Sprint List">
+
+    /**
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/sprints", method = RequestMethod.GET)
+    public ResponseEntity<?> getSprintsByProject(@RequestParam(value = "projectId") int projectId) throws Exception {
+        return sprintService.getSprintsByProject(projectId);
     }
     //</editor-fold>
 }

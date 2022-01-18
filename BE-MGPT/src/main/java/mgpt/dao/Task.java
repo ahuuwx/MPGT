@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.TaskSummaryInSprintResponseDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,6 +41,18 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "sprint_id")
     private Sprint sprintId;
+
+    //<editor-fold desc="convertToTaskSummaryInSprintDto">
+    public TaskSummaryInSprintResponseDto convertToTaskSummaryInSprintDto() {
+        TaskSummaryInSprintResponseDto taskSummaryInSprintResponseDto = new TaskSummaryInSprintResponseDto();
+        taskSummaryInSprintResponseDto.setTaskId(taskId);
+        taskSummaryInSprintResponseDto.setTaskName(taskName);
+        taskSummaryInSprintResponseDto.setStatusId(statusId.getStatusId());
+        taskSummaryInSprintResponseDto.setAssigneeUsername(assigneeUsername.getUsername());
+        taskSummaryInSprintResponseDto.setAssigneeName(assigneeUsername.getName());
+        return taskSummaryInSprintResponseDto;
+    }
+    //</editor-fold>
 
 
 }

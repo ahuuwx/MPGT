@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.SprintListResponseDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,5 +29,16 @@ public class Sprint {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project projectId;
+
+    //<editor-fold desc="Convert To Sprint List Dto">
+    public SprintListResponseDto convertToSprintListDto() {
+        SprintListResponseDto sprintListResponseDto = new SprintListResponseDto();
+        sprintListResponseDto.setSprintId(sprintId);
+        sprintListResponseDto.setSprintName(sprintName);
+        sprintListResponseDto.setStartDate(startDate);
+        sprintListResponseDto.setEndDate(endDate);
+        return sprintListResponseDto;
+    }
+    //</editor-fold>
 
 }

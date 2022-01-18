@@ -28,6 +28,7 @@ public class ProjectService {
     @Autowired
     ProjectOfUserRepository projectOfUserRepository;
 
+    //<editor-fold desc="Get Projects By Username">
     public ResponseEntity<?> getProjectsByUsername(String username) {
         try {
             Account account = accountRepository.findAccountByUsername(username);
@@ -93,6 +94,7 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //</editor-fold>
 
     //<editor-fold desc="Get Project Detail By ProjectID">
     public ResponseEntity<?> getProjectDetailByProjectId(int projectId) {
