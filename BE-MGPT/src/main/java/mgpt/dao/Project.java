@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.ProjectDetailResponseDto;
 import mgpt.model.ProjectListResponseDto;
 
 import javax.persistence.*;
@@ -44,6 +45,17 @@ public class Project {
         projectListResponseDto.setProjectId(projectId);
         projectListResponseDto.setProjectName(projectName);
         return projectListResponseDto;
+    }
+    // </editor-fold>
+
+    // <editor-fold desc="Convert to ProjectDetailDto"
+    public ProjectDetailResponseDto convertToProjectDetailDto() {
+        ProjectDetailResponseDto projectDetailResponseDto = new ProjectDetailResponseDto();
+        projectDetailResponseDto.setProjectId(projectId);
+        projectDetailResponseDto.setProjectName(projectName);
+        projectDetailResponseDto.setStartDate(startDate);
+        projectDetailResponseDto.setEndDate(endDate);
+        return projectDetailResponseDto;
     }
     // </editor-fold>
 }

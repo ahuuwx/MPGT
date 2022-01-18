@@ -3,6 +3,7 @@ package mgpt.service;
 import mgpt.dao.Account;
 import mgpt.dao.Project;
 import mgpt.dao.ProjectOfUser;
+import mgpt.model.ProjectDetailResponseDto;
 import mgpt.model.ProjectListResponseDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.ProjectOfUserRepository;
@@ -30,7 +31,7 @@ public class ProjectService {
     public ResponseEntity<?> getProjectsByUsername(String username) {
         try {
             Account account = accountRepository.findAccountByUsername(username);
-            if(account != null) {
+            if (account != null) {
                 /**
                  * ROLE: MEMBER
                  */
@@ -84,13 +85,44 @@ public class ProjectService {
 
                     return ResponseEntity.ok(projectListResponseDto);
                 }
-            }else {
+            } else {
                 throw new Exception(Constant.INVALID_USERNAME);
             }
             return ResponseEntity.ok("OK");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
     }
+
+    //<editor-fold desc="Get Project Detail By ProjectID">
+    public ResponseEntity<?> getProjectDetailByProjectId(int projectId) {
+        try {
+
+            Project project=projectRepository.findProjectsByProjectId(projectId);
+            ProjectDetailResponseDto projectDetailResponseDto=project.convertToProjectDetailDto();
+            //query for account leader and lecturer
+            Account accountLeader=accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID,projectId);
+            List<Account> accountLecturerList =accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID,projectId);
+            List<String> lecturerNameList= new ArrayList<>();
+            for (Account account: accountLecturerList) {
+                lecturerNameList.add(account.getName());
+            }
+
+            //query for member name list
+            List<Account> accountMemberList =accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID,projectId);
+            List<String> memberNameList= new ArrayList<>();
+            for (Account account: accountMemberList) {
+                memberNameList.add(account.getName());
+            }
+
+            //set data
+            projectDetailResponseDto.setLeaderName(accountLeader.getName());
+            projectDetailResponseDto.setLecturerName(lecturerNameList);
+            projectDetailResponseDto.setMemberList(memberNameList);
+            return ResponseEntity.ok(projectDetailResponseDto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
 }

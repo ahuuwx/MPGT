@@ -42,7 +42,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(Constant.URL_LOGIN, Constant.URL_GET_PROFILE,"/get-profile","/projects")
+                .antMatchers(Constant.URL_LOGIN, Constant.URL_GET_PROFILE,"/get-profile","/projects","/project")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()

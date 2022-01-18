@@ -20,5 +20,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     List<Project> findProjectsByProjectOfUserListIsIn(List<ProjectOfUser> projectOfUserList);
 
+    Project findProjectsByProjectId(int projectId);
+
 
 }

@@ -76,9 +76,32 @@ public class RestAPI {
     /**
      * -------------------------------PROJECT--------------------------------
      */
+    //<editor-fold desc="1.3 Get Project List">
+
+    /**
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     */
     @CrossOrigin
     @RequestMapping(value = "/projects", method = RequestMethod.GET)
     public ResponseEntity<?> getProjectsByUsername(@RequestParam(value = "username") String username) throws Exception {
         return projectService.getProjectsByUsername(username);
     }
+    //</editor-fold>
+
+    //<editor-fold desc="1.4 Get Project Detail">
+    /**
+     *
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    public ResponseEntity<?> getProjectDetailByProjectId(@RequestParam(value = "projectId") int projectId) throws Exception {
+        return projectService.getProjectDetailByProjectId(projectId);
+    }
+    //</editor-fold>
 }
