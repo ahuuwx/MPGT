@@ -49,8 +49,13 @@ public class Task {
         taskSummaryInSprintResponseDto.setTaskId(taskId);
         taskSummaryInSprintResponseDto.setTaskName(taskName);
         taskSummaryInSprintResponseDto.setStatusId(statusId.getStatusId());
-        taskSummaryInSprintResponseDto.setAssigneeUsername(assigneeUsername.getUsername());
-        taskSummaryInSprintResponseDto.setAssigneeName(assigneeUsername.getName());
+        if(assigneeUsername==null){
+            taskSummaryInSprintResponseDto.setAssigneeUsername(null);
+            taskSummaryInSprintResponseDto.setAssigneeName(null);
+        }else {
+            taskSummaryInSprintResponseDto.setAssigneeUsername(assigneeUsername.getUsername());
+            taskSummaryInSprintResponseDto.setAssigneeName(assigneeUsername.getName());
+        }
         return taskSummaryInSprintResponseDto;
     }
     //</editor-fold>
