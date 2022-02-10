@@ -1,9 +1,11 @@
 package mgpt.controller;
 
 import mgpt.model.LoginRequestDto;
+import mgpt.model.TaskCreatingRequestDto;
 import mgpt.service.AccountService;
 import mgpt.service.ProjectService;
 import mgpt.service.SprintService;
+import mgpt.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -21,6 +23,8 @@ public class RestAPI {
     ProjectService projectService;
     @Autowired
     SprintService sprintService;
+    @Autowired
+    TaskService taskService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -122,6 +126,23 @@ public class RestAPI {
     @RequestMapping(value = "/sprints", method = RequestMethod.GET)
     public ResponseEntity<?> getSprintsByProject(@RequestParam(value = "projectId") int projectId) throws Exception {
         return sprintService.getSprintsByProject(projectId);
+    }
+    //</editor-fold>
+    /**
+     * -------------------------------TASK--------------------------------
+     */
+
+    //<editor-fold desc="Create New Task">
+    /**
+     *
+     * @param newTask
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task", method = RequestMethod.POST)
+    public ResponseEntity<?> createNewTask(@RequestBody TaskCreatingRequestDto newTask) throws Exception {
+        return taskService.createNewTask(newTask);
     }
     //</editor-fold>
 }

@@ -26,4 +26,9 @@ public class Constant {
      * ACCOUNT
      */
     public static final String INVALID_USERNAME = "INVALID USERNAME";
+    /**
+     * TASK
+     */
+    public static final String INVALID_TASKNAME = "INVALID TASK NAME";
+    public static final String TIMEZONE = "Asia/Ho_Chi_Minh";
 }
