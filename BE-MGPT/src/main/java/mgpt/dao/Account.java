@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.AccountSummaryDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +28,8 @@ public class Account implements Serializable {
     private boolean isAvailable;
     @Column(name = "token_notification")
     private String tokenNotification;
+    @Column(name = "avatar")
+    private String avatar;
 
     @OneToMany(mappedBy = "creatorUsername")
     private List<Task> taskList;
@@ -38,6 +41,14 @@ public class Account implements Serializable {
 
     @OneToOne(mappedBy = "account")
     private RoleOfUser roleOfUser;
+
+    public AccountSummaryDto converToAccountSummaryDto(){
+        AccountSummaryDto accountSummaryDto=new AccountSummaryDto();
+        accountSummaryDto.setUsername(username);
+        accountSummaryDto.setName(name);
+        accountSummaryDto.setAvatar(avatar);
+        return  accountSummaryDto;
+    }
 
 
 }

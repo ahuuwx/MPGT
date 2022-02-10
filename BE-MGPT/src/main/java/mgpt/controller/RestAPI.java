@@ -163,4 +163,32 @@ public class RestAPI {
         return taskService.updateTask(taskId, updateTask);
     }
     //</editor-fold>
+    //<editor-fold desc="Delete Task">
+
+    /**
+     *
+     * @param taskId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteTaskByTaskId(@RequestParam int taskId) throws Exception {
+        return taskService.deleteTaskByTaskId(taskId);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="View Task detail by ID">
+
+    /**
+     *
+     * @param taskId
+     * @return
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task", method = RequestMethod.GET)
+    public ResponseEntity<?> viewTaskDetailByTaskId(@RequestParam int taskId) throws  Exception{
+        return taskService.viewTaskDetailByTaskId(taskId);
+    }
+    //</editor-fold>
 }

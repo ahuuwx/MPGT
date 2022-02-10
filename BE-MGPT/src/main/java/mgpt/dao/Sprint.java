@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.SprintDto;
 import mgpt.model.SprintListResponseDto;
 
 import javax.persistence.*;
@@ -40,5 +41,12 @@ public class Sprint {
         return sprintListResponseDto;
     }
     //</editor-fold>
+
+    public SprintDto convertToSprintDto() {
+        SprintDto sprintDto = new SprintDto();
+        sprintDto.setSprintId(sprintId);
+        sprintDto.setSprintName(sprintName);
+        return sprintDto;
+    }
 
 }
