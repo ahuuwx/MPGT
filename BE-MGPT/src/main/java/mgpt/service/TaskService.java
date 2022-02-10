@@ -131,6 +131,9 @@ public class TaskService {
             taskDetailResponseDto.setTaskName(task.getTaskName());
             taskDetailResponseDto.setTaskDescription(task.getTaskDescription());
             taskDetailResponseDto.setCreatorUser(task.getCreatorUsername().converToAccountSummaryDto());
+            if(task.getAssigneeUsername()==null){
+                taskDetailResponseDto.setAssigneeUser(null);
+            }else
             taskDetailResponseDto.setAssigneeUser(task.getAssigneeUsername().converToAccountSummaryDto());
             taskDetailResponseDto.setCreateDate(task.getCreateDate());
             taskDetailResponseDto.setUpdateDate(task.getUpdateDate());
