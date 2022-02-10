@@ -42,7 +42,13 @@ public class TaskService {
 
         TaskStatus taskStatus=new TaskStatus();
         taskStatus.setStatusId(1);
-        if(newTask.getTaskName()!=null&&account!=null&&sprint!=null){
+        if(account==null){
+            throw new Exception(Constant.INVALID_USERNAME);
+        }
+        if(sprint==null){
+            throw new Exception(Constant.INVALID_SPRINT);
+        }
+        if(newTask.getTaskName()!=null){
             Task task = new Task();
             task.setTaskName(newTask.getTaskName());
             task.setCreatorUsername(account);
