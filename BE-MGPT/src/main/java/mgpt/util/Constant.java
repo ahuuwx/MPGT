@@ -26,9 +26,19 @@ public class Constant {
      * ACCOUNT
      */
     public static final String INVALID_USERNAME = "INVALID USERNAME";
+    public static final String INVALID_ASSIGNEEUSERNAME = "INVALID ASSIGNEE USERNAME";
     /**
      * TASK
      */
     public static final String INVALID_TASKNAME = "INVALID TASK NAME";
+    public static final String INVALID_TASKID = "INVALID TASK ID";
     public static final String TIMEZONE = "Asia/Ho_Chi_Minh";
+    /**
+     * TASK STATUS
+     */
+    public static final String INVALID_TASKSTATUS = "INVALID TASK STATUS";
+    /**
+     * SPRINT
+     */
+    public static final String INVALID_SPRINT = "INVALID SPRINT";
 }

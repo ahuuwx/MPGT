@@ -9,9 +9,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class TaskCreatingRequestDto {
+public class TaskUpdateRequestDto {
     private String taskName;
-    private String creatorUsername;
+    private String taskDescription;
+    private String assigneeUsername;
     private int sprintId;
-
+    private int statusId;
 }

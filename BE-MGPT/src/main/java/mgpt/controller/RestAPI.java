@@ -2,6 +2,7 @@ package mgpt.controller;
 
 import mgpt.model.LoginRequestDto;
 import mgpt.model.TaskCreatingRequestDto;
+import mgpt.model.TaskUpdateRequestDto;
 import mgpt.service.AccountService;
 import mgpt.service.ProjectService;
 import mgpt.service.SprintService;
@@ -143,6 +144,23 @@ public class RestAPI {
     @RequestMapping(value = "/task", method = RequestMethod.POST)
     public ResponseEntity<?> createNewTask(@RequestBody TaskCreatingRequestDto newTask) throws Exception {
         return taskService.createNewTask(newTask);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Update Task">
+
+    /**
+     *
+     * @param taskId
+     * @param updateTask
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateTaskByTaskId(@RequestParam int taskId,
+                                                    @RequestBody TaskUpdateRequestDto updateTask) throws Exception {
+        return taskService.updateTask(taskId, updateTask);
     }
     //</editor-fold>
 }
