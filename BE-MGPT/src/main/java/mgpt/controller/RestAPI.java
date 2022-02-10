@@ -163,6 +163,7 @@ public class RestAPI {
         return taskService.updateTask(taskId, updateTask);
     }
     //</editor-fold>
+
     //<editor-fold desc="Delete Task">
 
     /**
@@ -179,7 +180,6 @@ public class RestAPI {
     //</editor-fold>
 
     //<editor-fold desc="View Task detail by ID">
-
     /**
      *
      * @param taskId
@@ -189,6 +189,22 @@ public class RestAPI {
     @RequestMapping(value = "/task", method = RequestMethod.GET)
     public ResponseEntity<?> viewTaskDetailByTaskId(@RequestParam int taskId) throws  Exception{
         return taskService.viewTaskDetailByTaskId(taskId);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="View Task By Sprint and Status">
+    /**
+     *
+     * @param sprintId
+     * @param status
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task", params = "sprintId", method = RequestMethod.GET)
+    public ResponseEntity<?> viewTaskListBySprintAndStatus(@RequestParam(value = "sprintId") int sprintId,
+                                                             @RequestParam(value = "status") String status) throws Exception {
+        return taskService.viewTaskListBySprintAndStatus(sprintId,status);
     }
     //</editor-fold>
 }

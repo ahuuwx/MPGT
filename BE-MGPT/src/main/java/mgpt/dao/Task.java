@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.TaskResponseBySprintAndStatus;
 import mgpt.model.TaskSummaryInSprintResponseDto;
 
 import javax.persistence.*;
@@ -59,6 +60,18 @@ public class Task {
         return taskSummaryInSprintResponseDto;
     }
     //</editor-fold>
+
+    public TaskResponseBySprintAndStatus convertToTaskResponeBySprintAndStatusDto() {
+        TaskResponseBySprintAndStatus  taskList= new TaskResponseBySprintAndStatus();
+        taskList.setTaskName(taskName);
+        if(assigneeUsername==null){
+            taskList.setAvatar(null);
+        }
+        else
+        taskList.setAvatar(assigneeUsername.getAvatar());
+        return taskList;
+    }
+
 
 
 }
