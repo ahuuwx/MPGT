@@ -1,16 +1,24 @@
 package mgpt.service;
 
+import mgpt.dao.Project;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
+import mgpt.model.SprintCreatingRequestDto;
 import mgpt.model.SprintListResponseDto;
 import mgpt.model.TaskSummaryInSprintResponseDto;
+import mgpt.repository.ProjectRepository;
 import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
+import mgpt.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +28,9 @@ public class SprintService {
     SprintRepository sprintRepository;
     @Autowired
     TaskRepository taskRepository;
+    @Autowired
+    ProjectRepository projectRepository;
+    SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_PATTERN);
 
     //<editor-fold desc="Get Sprint List By Project">
     public ResponseEntity<?> getSprintsByProject(int projectId) {
@@ -40,4 +51,38 @@ public class SprintService {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Convert to Date End">
+    public Date convertToTimeEnd(Date timeStart, int duration) throws ParseException {
+        Date timeEnd;
+
+        //Date d = sdf.parse(timeStart);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(timeStart);
+        cal.add(Calendar.DATE, duration);
+
+        return timeEnd = cal.getTime();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Create New Sprint">
+    public ResponseEntity<?> createNewSprint(SprintCreatingRequestDto newSprint) throws Exception {
+        try {
+            Project project = projectRepository.findProjectsByProjectId(newSprint.getProjectId());
+            if (project != null) {
+                Sprint sprint = new Sprint();
+                sprint.setSprintName(newSprint.getSprintName());
+                sprint.setStartDate(newSprint.getStartDate());
+                sprint.setEndDate(convertToTimeEnd(newSprint.getStartDate(), newSprint.getDuration()));
+                sprint.setProjectId(project);
+                sprintRepository.save(sprint);
+                return ResponseEntity.ok(true);
+            } else {
+                throw new Exception(Constant.INVALID_PROJECT_ID);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
 }

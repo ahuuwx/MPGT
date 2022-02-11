@@ -41,4 +41,9 @@ public class Constant {
      * SPRINT
      */
     public static final String INVALID_SPRINT = "INVALID SPRINT";
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+    /**
+     * PROJECT
+     */
+    public static final String INVALID_PROJECT_ID = "INVALID PROJECT ID";
 }

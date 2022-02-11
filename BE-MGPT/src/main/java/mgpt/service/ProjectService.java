@@ -100,20 +100,20 @@ public class ProjectService {
     public ResponseEntity<?> getProjectDetailByProjectId(int projectId) {
         try {
 
-            Project project=projectRepository.findProjectsByProjectId(projectId);
-            ProjectDetailResponseDto projectDetailResponseDto=project.convertToProjectDetailDto();
+            Project project = projectRepository.findProjectsByProjectId(projectId);
+            ProjectDetailResponseDto projectDetailResponseDto = project.convertToProjectDetailDto();
             //query for account leader and lecturer
-            Account accountLeader=accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID,projectId);
-            List<Account> accountLecturerList =accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID,projectId);
-            List<String> lecturerNameList= new ArrayList<>();
-            for (Account account: accountLecturerList) {
+            Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
+            List<Account> accountLecturerList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectId);
+            List<String> lecturerNameList = new ArrayList<>();
+            for (Account account : accountLecturerList) {
                 lecturerNameList.add(account.getName());
             }
 
             //query for member name list
-            List<Account> accountMemberList =accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID,projectId);
-            List<String> memberNameList= new ArrayList<>();
-            for (Account account: accountMemberList) {
+            List<Account> accountMemberList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
+            List<String> memberNameList = new ArrayList<>();
+            for (Account account : accountMemberList) {
                 memberNameList.add(account.getName());
             }
 

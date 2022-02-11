@@ -42,12 +42,12 @@ public class Account implements Serializable {
     @OneToOne(mappedBy = "account")
     private RoleOfUser roleOfUser;
 
-    public AccountSummaryDto converToAccountSummaryDto(){
-        AccountSummaryDto accountSummaryDto=new AccountSummaryDto();
+    public AccountSummaryDto converToAccountSummaryDto() {
+        AccountSummaryDto accountSummaryDto = new AccountSummaryDto();
         accountSummaryDto.setUsername(username);
         accountSummaryDto.setName(name);
         accountSummaryDto.setAvatar(avatar);
-        return  accountSummaryDto;
+        return accountSummaryDto;
     }
 
 

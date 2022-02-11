@@ -16,6 +16,7 @@ import java.util.Date;
 @Table(name = "sprint")
 public class Sprint {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sprint_id")
     private int sprintId;
     @Column(name = "sprint_name")

@@ -50,10 +50,10 @@ public class Task {
         taskSummaryInSprintResponseDto.setTaskId(taskId);
         taskSummaryInSprintResponseDto.setTaskName(taskName);
         taskSummaryInSprintResponseDto.setStatusId(statusId.getStatusId());
-        if(assigneeUsername==null){
+        if (assigneeUsername == null) {
             taskSummaryInSprintResponseDto.setAssigneeUsername(null);
             taskSummaryInSprintResponseDto.setAssigneeName(null);
-        }else {
+        } else {
             taskSummaryInSprintResponseDto.setAssigneeUsername(assigneeUsername.getUsername());
             taskSummaryInSprintResponseDto.setAssigneeName(assigneeUsername.getName());
         }
@@ -62,16 +62,14 @@ public class Task {
     //</editor-fold>
 
     public TaskResponseBySprintAndStatus convertToTaskResponeBySprintAndStatusDto() {
-        TaskResponseBySprintAndStatus  taskList= new TaskResponseBySprintAndStatus();
+        TaskResponseBySprintAndStatus taskList = new TaskResponseBySprintAndStatus();
         taskList.setTaskName(taskName);
-        if(assigneeUsername==null){
+        if (assigneeUsername == null) {
             taskList.setAvatar(null);
-        }
-        else
-        taskList.setAvatar(assigneeUsername.getAvatar());
+        } else
+            taskList.setAvatar(assigneeUsername.getAvatar());
         return taskList;
     }
-
 
 
 }
