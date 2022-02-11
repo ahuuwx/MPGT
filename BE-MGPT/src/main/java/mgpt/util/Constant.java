@@ -42,6 +42,9 @@ public class Constant {
      */
     public static final String INVALID_SPRINT = "INVALID SPRINT";
     public static final String DATE_PATTERN = "yyyy-MM-dd";
+    public static final String NULL_SPRINT_NAME = "SPRINT NAME CAN NOT BE NULL";
+
+
     /**
      * PROJECT
      */

@@ -1,9 +1,6 @@
 package mgpt.controller;
 
-import mgpt.model.LoginRequestDto;
-import mgpt.model.SprintCreatingRequestDto;
-import mgpt.model.TaskCreatingRequestDto;
-import mgpt.model.TaskUpdateRequestDto;
+import mgpt.model.*;
 import mgpt.service.AccountService;
 import mgpt.service.ProjectService;
 import mgpt.service.SprintService;
@@ -127,6 +124,23 @@ public class RestAPI {
     @RequestMapping(value = "/sprint", method = RequestMethod.POST)
     public ResponseEntity<?> createNewSprint(@RequestBody SprintCreatingRequestDto newSprint) throws Exception {
         return sprintService.createNewSprint(newSprint);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="update Sprint">
+
+    /**
+     *
+     * @param sprintId
+     * @param updateSprint
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/sprint", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateSprintBySprintId(@RequestParam int sprintId,
+                                                @RequestBody SprintUpdatingRequestDto updateSprint) throws Exception {
+        return sprintService.updateSprint(sprintId, updateSprint);
     }
     //</editor-fold>
 

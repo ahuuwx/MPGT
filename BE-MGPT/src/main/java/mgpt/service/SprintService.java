@@ -3,9 +3,7 @@ package mgpt.service;
 import mgpt.dao.Project;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
-import mgpt.model.SprintCreatingRequestDto;
-import mgpt.model.SprintListResponseDto;
-import mgpt.model.TaskSummaryInSprintResponseDto;
+import mgpt.model.*;
 import mgpt.repository.ProjectRepository;
 import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
@@ -80,6 +78,29 @@ public class SprintService {
                 throw new Exception(Constant.INVALID_PROJECT_ID);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Update Sprint">
+    public ResponseEntity<?> updateSprint(int sprintId, SprintUpdatingRequestDto updateSprint) throws Exception {
+        try{
+            Sprint sprint=sprintRepository.findBySprintId(sprintId);
+            if(updateSprint.getSprintName()==null||updateSprint.getSprintName().matches(""))
+                throw new Exception(Constant.NULL_SPRINT_NAME);
+            if(sprint!=null){
+                sprint.setSprintName(updateSprint.getSprintName());
+                sprint.setStartDate(updateSprint.getStartDate());
+                sprint.setEndDate(convertToTimeEnd(updateSprint.getStartDate(),updateSprint.getDuration()));
+                sprintRepository.save(sprint);
+                return ResponseEntity.ok(true);
+            }
+            else
+                throw new Exception(Constant.INVALID_SPRINT);
+
+        }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
