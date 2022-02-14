@@ -3,7 +3,10 @@ package mgpt.service;
 import mgpt.dao.Project;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
-import mgpt.model.*;
+import mgpt.model.SprintCreatingRequestDto;
+import mgpt.model.SprintListResponseDto;
+import mgpt.model.SprintUpdatingRequestDto;
+import mgpt.model.TaskSummaryInSprintResponseDto;
 import mgpt.repository.ProjectRepository;
 import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
@@ -96,11 +99,32 @@ public class SprintService {
                 sprint.setEndDate(convertToTimeEnd(updateSprint.getStartDate(),updateSprint.getDuration()));
                 sprintRepository.save(sprint);
                 return ResponseEntity.ok(true);
-            }
-            else
+            } else
                 throw new Exception(Constant.INVALID_SPRINT);
 
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Delete Sprint by Sprint Id">
+    public ResponseEntity<?> deleteSprintBySprintId(int sprintId) throws Exception {
+        try {
+
+            if (!sprintRepository.existsById(sprintId)) {
+                throw new IllegalArgumentException(Constant.INVALID_TASKID);
+            } else {
+                Sprint delSprint = sprintRepository.findBySprintId(sprintId);
+                List<Task> taskList = taskRepository.findAllBySprintId_SprintId(sprintId);
+                for (Task task : taskList) {
+                    task.setSprintId(null);
+                }
+                sprintRepository.delete(delSprint);
+                return ResponseEntity.ok(Boolean.TRUE);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

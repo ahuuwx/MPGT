@@ -129,8 +129,21 @@ public class RestAPI {
 
     //<editor-fold desc="update Sprint">
 
+    //<editor-fold desc="Delete Sprint">
+
     /**
-     *
+     * @param sprintId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/sprint", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteSprintBySprintId(@RequestParam int sprintId) throws Exception {
+        return sprintService.deleteSprintBySprintId(sprintId);
+    }
+    //</editor-fold>
+
+    /**
      * @param sprintId
      * @param updateSprint
      * @return
@@ -139,7 +152,7 @@ public class RestAPI {
     @CrossOrigin
     @RequestMapping(value = "/sprint", method = RequestMethod.PUT)
     public ResponseEntity<?> updateSprintBySprintId(@RequestParam int sprintId,
-                                                @RequestBody SprintUpdatingRequestDto updateSprint) throws Exception {
+                                                    @RequestBody SprintUpdatingRequestDto updateSprint) throws Exception {
         return sprintService.updateSprint(sprintId, updateSprint);
     }
     //</editor-fold>

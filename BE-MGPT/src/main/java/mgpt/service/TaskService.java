@@ -50,7 +50,8 @@ public class TaskService {
             if (account == null) {
                 throw new Exception(Constant.INVALID_USERNAME);
             }
-            if (sprint == null) {
+            //check if sprint ID is invalid and not match null ( 0 )
+            if (sprint == null && newTask.getSprintId() != 0) {
                 throw new Exception(Constant.INVALID_SPRINT);
             }
             if (newTask.getTaskName() != null) {
@@ -60,7 +61,12 @@ public class TaskService {
 
                 task.setCreateDate(Date.from(today.toInstant()));
                 task.setStatusId(taskStatus);
-                task.setSprintId(sprint);
+                //if sprint null
+                if (newTask.getSprintId() == 0) {
+                    task.setSprintId(null);
+                } else
+                    task.setSprintId(sprint);
+
                 taskRepository.save(task);
             } else {
                 throw new Exception(Constant.INVALID_TASKNAME);
@@ -159,7 +165,7 @@ public class TaskService {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Vieww Task By Sprint and Status">
+    //<editor-fold desc="View Task By Sprint and Status">
     public ResponseEntity<?> viewTaskListBySprintAndStatus(int sprintId, String status) throws Exception {
         try {
             Sprint sprint = sprintRepository.findBySprintId(sprintId);
