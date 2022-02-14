@@ -137,6 +137,7 @@ public class TaskService {
                 throw new Exception(Constant.INVALID_TASKID);
             } else {
                 TaskDetailResponseDto taskDetailResponseDto = new TaskDetailResponseDto();
+                taskDetailResponseDto.setTaskId(task.getTaskId());
                 taskDetailResponseDto.setTaskName(task.getTaskName());
                 taskDetailResponseDto.setTaskDescription(task.getTaskDescription());
                 taskDetailResponseDto.setCreatorUser(task.getCreatorUsername().converToAccountSummaryDto());

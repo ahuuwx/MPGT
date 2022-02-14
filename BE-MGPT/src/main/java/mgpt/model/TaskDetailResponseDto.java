@@ -10,6 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class TaskDetailResponseDto {
+    private int taskId;
     private String taskName;
     private String taskDescription;
     private AccountSummaryDto creatorUser;
