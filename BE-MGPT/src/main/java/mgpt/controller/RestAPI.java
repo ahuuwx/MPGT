@@ -1,11 +1,9 @@
 package mgpt.controller;
 
 import mgpt.model.*;
-import mgpt.service.AccountService;
-import mgpt.service.ProjectService;
-import mgpt.service.SprintService;
-import mgpt.service.TaskService;
+import mgpt.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,8 @@ public class RestAPI {
     SprintService sprintService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    TaskCommentService taskCommentService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -248,4 +248,36 @@ public class RestAPI {
         return taskService.viewTaskListBySprintAndStatus(sprintId,status);
     }
     //</editor-fold>
+    /**
+     * -------------------------------TASK COMMENT--------------------------------
+     */
+    //<editor-fold desc="Create New Comment">
+    /**
+     *
+     * @param newComment
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task-comment", method = RequestMethod.POST)
+    public ResponseEntity<?> createNewCommentInTask(@RequestBody TaskCommentRequestDto newComment) throws Exception {
+        return taskCommentService.createNewCommentInTask(newComment);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="View List Comment">
+
+    /**
+     *
+     * @param taskId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task-comment", method = RequestMethod.GET)
+    public ResponseEntity<?> viewCommentListInTask(@RequestParam(value = "taskId") int taskId) throws Exception {
+        return taskCommentService.viewCommentListInTask(taskId);
+    }
+    //</editor-fold>
+
 }

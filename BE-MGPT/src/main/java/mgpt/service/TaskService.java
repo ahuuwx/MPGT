@@ -92,7 +92,7 @@ public class TaskService {
             } else if (assigneeAccount == null) {
                 throw new Exception(Constant.INVALID_ASSIGNEEUSERNAME);
             } else if (taskStatus == null) {
-                throw new Exception(Constant.INVALID_TASKSTATUS);
+                throw new Exception(Constant.INVALID_TASK_STATUS);
             } else if (sprint == null) {
                 throw new Exception(Constant.INVALID_SPRINT);
             } else {
