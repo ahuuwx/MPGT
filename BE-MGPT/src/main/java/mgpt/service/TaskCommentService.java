@@ -4,10 +4,7 @@ import mgpt.dao.Account;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
 import mgpt.dao.TaskComment;
-import mgpt.model.TaskCommentListResponseDto;
-import mgpt.model.TaskCommentRequestDto;
-import mgpt.model.TaskCreatingRequestDto;
-import mgpt.model.TaskResponseBySprintAndStatus;
+import mgpt.model.*;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.TaskCommentRepository;
 import mgpt.repository.TaskRepository;
@@ -70,7 +67,7 @@ public class TaskCommentService {
                 throw new Exception(Constant.INVALID_TASKID);
             } else {
                 List<TaskComment> taskCommentList = taskCommentRepository.findAllByTask_TaskId(taskId);
-                List<TaskCommentListResponseDto> taskCommentListResponseDtoList = taskCommentList.stream().map(taskComment -> taskComment.convertToTaskCommentListDto()).collect(Collectors.toList());
+                List<CommentDto> taskCommentListResponseDtoList = taskCommentList.stream().map(taskComment -> taskComment.convertToTaskCommentListDto()).collect(Collectors.toList());
                 return ResponseEntity.ok(taskCommentListResponseDtoList);
             }
         } catch (Exception e) {

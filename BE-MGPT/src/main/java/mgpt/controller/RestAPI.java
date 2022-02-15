@@ -3,7 +3,6 @@ package mgpt.controller;
 import mgpt.model.*;
 import mgpt.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.AccessType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +23,8 @@ public class RestAPI {
     TaskService taskService;
     @Autowired
     TaskCommentService taskCommentService;
+    @Autowired
+    TaskHistoryService taskHistoryService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -277,6 +278,23 @@ public class RestAPI {
     @RequestMapping(value = "/task-comment", method = RequestMethod.GET)
     public ResponseEntity<?> viewCommentListInTask(@RequestParam(value = "taskId") int taskId) throws Exception {
         return taskCommentService.viewCommentListInTask(taskId);
+    }
+    //</editor-fold>
+    /**
+     * -------------------------------History--------------------------------
+     */
+    //<editor-fold desc="View History List">
+
+    /**
+     *
+     * @param taskId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/history", method = RequestMethod.GET)
+    public ResponseEntity<?> viewHistoryListInTask(@RequestParam(value = "taskId") int taskId) throws Exception {
+        return taskHistoryService.viewHistoryListInTask(taskId);
     }
     //</editor-fold>
 

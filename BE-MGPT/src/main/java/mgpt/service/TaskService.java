@@ -1,17 +1,8 @@
 package mgpt.service;
 
-import mgpt.dao.Account;
-import mgpt.dao.Sprint;
-import mgpt.dao.Task;
-import mgpt.dao.TaskStatus;
-import mgpt.model.TaskCreatingRequestDto;
-import mgpt.model.TaskDetailResponseDto;
-import mgpt.model.TaskResponseBySprintAndStatus;
-import mgpt.model.TaskUpdateRequestDto;
-import mgpt.repository.AccountRepository;
-import mgpt.repository.SprintRepository;
-import mgpt.repository.TaskRepository;
-import mgpt.repository.TaskStatusRepository;
+import mgpt.dao.*;
+import mgpt.model.*;
+import mgpt.repository.*;
 import mgpt.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,11 +25,15 @@ public class TaskService {
     SprintRepository sprintRepository;
     @Autowired
     TaskStatusRepository taskStatusRepository;
-    //local time
-
+    @Autowired
+    TaskHistoryService taskHistoryService;
+    @Autowired
+    TaskCommentRepository taskCommentRepository;
+    @Autowired
+    TaskHistoryRepository taskHistoryRepository;
 
     //<editor-fold desc="Create New Task">
-    public ResponseEntity<?> createNewTask(TaskCreatingRequestDto newTask) throws Exception {
+    public ResponseEntity<?> createNewTask(TaskCreatingRequestDto newTask) {
         try {
             Account account = accountRepository.findAccountByUsername(newTask.getCreatorUsername());
             Sprint sprint = sprintRepository.findBySprintId(newTask.getSprintId());
@@ -68,10 +63,20 @@ public class TaskService {
                     task.setSprintId(sprint);
 
                 taskRepository.save(task);
+                //create history in Create Task
+                TaskHistoryRequestDto historyRequestDto = new TaskHistoryRequestDto();
+                historyRequestDto.setUsername(account.getUsername());
+                historyRequestDto.setActionType(1);
+                historyRequestDto.setTaskId(task.getTaskId());
+                Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
+                if (!check)
+                    throw new Exception("Create History in task Failed.");
+                //
+                return ResponseEntity.ok(true);
             } else {
                 throw new Exception(Constant.INVALID_TASKNAME);
             }
-            return ResponseEntity.ok(true);
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -80,8 +85,9 @@ public class TaskService {
     //</editor-fold>
 
     //<editor-fold desc="Update Task">
-    public ResponseEntity<?> updateTask(int taskId, TaskUpdateRequestDto newTask) throws Exception {
+    public ResponseEntity<?> updateTask(int taskId, TaskUpdateRequestDto newTask) {
         try {
+            //assignee, status, sprint lúc nào cũng có vì có api hiện list
             Account assigneeAccount = accountRepository.findAccountByUsername(newTask.getAssigneeUsername());
             TaskStatus taskStatus = taskStatusRepository.findByStatusId(newTask.getStatusId());
             Sprint sprint = sprintRepository.findBySprintId(newTask.getSprintId());
@@ -89,25 +95,71 @@ public class TaskService {
             ZonedDateTime today = ZonedDateTime.now(zoneId);
             if (!taskRepository.existsById(taskId)) {
                 throw new IllegalArgumentException(Constant.INVALID_TASKID);
-            } else if (assigneeAccount == null) {
-                throw new Exception(Constant.INVALID_ASSIGNEEUSERNAME);
-            } else if (taskStatus == null) {
-                throw new Exception(Constant.INVALID_TASK_STATUS);
-            } else if (sprint == null) {
-                throw new Exception(Constant.INVALID_SPRINT);
             } else {
                 Task updateTask = taskRepository.findByTaskId(taskId);
 
-                updateTask.setTaskName(newTask.getTaskName());
                 updateTask.setTaskDescription(newTask.getTaskDescription());
-
-                updateTask.setAssigneeUsername(assigneeAccount);
-
                 updateTask.setUpdateDate(Date.from(today.toInstant()));
 
-                updateTask.setStatusId(taskStatus);
 
-                updateTask.setSprintId(sprint);
+                //<editor-fold desc="Create History In Update Task">
+                TaskHistoryRequestDto historyRequestDto = new TaskHistoryRequestDto();
+                historyRequestDto.setUsername(newTask.getActorUsername());
+                historyRequestDto.setTaskId(taskId);
+
+                /**
+                 * Get action Type
+                 */
+                //change Task Name
+                String s1=updateTask.getTaskName();
+                String s2= newTask.getTaskName();
+                if (!s1.equals(s2)) {
+                    historyRequestDto.setActionType(2);
+                    historyRequestDto.setWhatHaveBeenChanged(updateTask.getTaskName() + " -> " + newTask.getTaskName());
+                    Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
+
+                    if (!check)
+                        throw new Exception("Create History in task Failed.");
+                }
+                //change assignee
+                String s3=updateTask.getAssigneeUsername().getUsername();
+                String s4=newTask.getAssigneeUsername();
+                if (!s3.equals(s4)) {
+                    historyRequestDto.setActionType(3);
+                    historyRequestDto.setWhatHaveBeenChanged(updateTask.getAssigneeUsername().getUsername() + " -> " + newTask.getAssigneeUsername());
+                    Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
+                    if (!check)
+                        throw new Exception("Create History in task Failed.");
+                }
+                //change status
+                int t1=updateTask.getStatusId().getStatusId();
+                int t2= newTask.getStatusId();
+                if (t1 != t2) {
+                    historyRequestDto.setActionType(4);
+                    historyRequestDto.setWhatHaveBeenChanged(updateTask.getStatusId().getStatusName() + " -> " + taskStatus.getStatusName());
+                    //store history
+                    Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
+                    if (!check)
+                        throw new Exception("Create History in task Failed.");
+                }
+                /**
+                 *
+                 */
+                //</editor-fold>
+                if (assigneeAccount == null)
+                    updateTask.setAssigneeUsername(null);
+                else
+                    updateTask.setAssigneeUsername(assigneeAccount);
+                if (taskStatus == null)
+                    updateTask.setStatusId(null);
+                else
+                    updateTask.setStatusId(taskStatus);
+                if (sprint == null)
+                    updateTask.setSprintId(null);
+                else
+                    updateTask.setSprintId(sprint);
+
+                updateTask.setTaskName(newTask.getTaskName());
                 taskRepository.save(updateTask);
                 return ResponseEntity.ok(Boolean.TRUE);
             }
@@ -119,7 +171,7 @@ public class TaskService {
     //</editor-fold>
 
     //<editor-fold desc="Delete Task by Task Id">
-    public ResponseEntity<?> deleteTaskByTaskId(int taskId) throws Exception {
+    public ResponseEntity<?> deleteTaskByTaskId(int taskId) {
         try {
             if (!taskRepository.existsById(taskId)) {
                 throw new IllegalArgumentException(Constant.INVALID_TASKID);
@@ -136,7 +188,7 @@ public class TaskService {
     //</editor-fold>
 
     //<editor-fold desc="View Task Detail">
-    public ResponseEntity<?> viewTaskDetailByTaskId(int taskId) throws Exception {
+    public ResponseEntity<?> viewTaskDetailByTaskId(int taskId) {
         try {
             Task task = taskRepository.findByTaskId(taskId);
             if (task == null) {
@@ -155,6 +207,15 @@ public class TaskService {
                 taskDetailResponseDto.setUpdateDate(task.getUpdateDate());
                 taskDetailResponseDto.setStatusId(task.getStatusId().getStatusId());
                 taskDetailResponseDto.setSprint(task.getSprintId().convertToSprintDto());
+                //Comment
+                List<TaskComment> taskCommentList=taskCommentRepository.findAllByTask_TaskId(taskId);
+                List<CommentDto> commentDtos=taskCommentList.stream().map(taskComment -> taskComment.convertToTaskCommentListDto()).collect(Collectors.toList());
+                taskDetailResponseDto.setComment(commentDtos);
+                //History
+                List<TaskHistory> taskHistoryList = taskHistoryRepository.findAllByTask_TaskId(taskId);
+                List<HistoryDto> historyListResponseDtos = taskHistoryList.stream().map(taskHistory -> taskHistory.convertToHistoryList()).collect(Collectors.toList());
+                taskDetailResponseDto.setHistory(historyListResponseDtos);
+
                 return ResponseEntity.ok(taskDetailResponseDto);
             }
 
@@ -166,7 +227,7 @@ public class TaskService {
     //</editor-fold>
 
     //<editor-fold desc="View Task By Sprint and Status">
-    public ResponseEntity<?> viewTaskListBySprintAndStatus(int sprintId, String status) throws Exception {
+    public ResponseEntity<?> viewTaskListBySprintAndStatus(int sprintId, String status) {
         try {
             Sprint sprint = sprintRepository.findBySprintId(sprintId);
             if (sprint == null) {

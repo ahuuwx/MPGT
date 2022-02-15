@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +20,8 @@ public class TaskDetailResponseDto {
     private Date updateDate;
     private int statusId;
     private SprintDto sprint;
+    private List<CommentDto> comment;
+    private List<HistoryDto> history;
+
 
 }

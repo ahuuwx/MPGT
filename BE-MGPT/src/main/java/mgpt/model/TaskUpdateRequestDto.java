@@ -11,6 +11,7 @@ public class TaskUpdateRequestDto {
     private String taskName;
     private String taskDescription;
     private String assigneeUsername;
+    private String actorUsername;
     private int sprintId;
-    private int statusId;
+    private int statusId;   
 }

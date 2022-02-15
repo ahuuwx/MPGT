@@ -3,6 +3,7 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.CommentDto;
 import mgpt.model.TaskCommentListResponseDto;
 
 import javax.persistence.*;
@@ -32,11 +33,11 @@ public class TaskComment implements Serializable {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    public TaskCommentListResponseDto convertToTaskCommentListDto(){
-        TaskCommentListResponseDto dto=new TaskCommentListResponseDto();
-        dto.setUsername(Username.getUsername());
+    public CommentDto convertToTaskCommentListDto(){
+        CommentDto dto=new CommentDto();
+        dto.setTaskCommentId(taskCommentId);
         dto.setComment(comment);
-        dto.setAvatar(getUsername().getAvatar());
+        dto.setCreateDate(createDate);
         return dto;
     }
 
