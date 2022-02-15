@@ -122,11 +122,22 @@ public class TaskService {
                         throw new Exception("Create History in task Failed.");
                 }
                 //change assignee
-                String s3=updateTask.getAssigneeUsername().getUsername();
-                String s4=newTask.getAssigneeUsername();
-                if (!s3.equals(s4)) {
+
+                String s3=new String();
+                if(updateTask.getAssigneeUsername()==null){
+                    s3="";
+                }else {
+                    s3 = updateTask.getAssigneeUsername().getUsername();
+                }
+                String s4=new String();
+                if(newTask.getActorUsername()==null){
+                    s4="";
+                }else {
+                    s4 = newTask.getAssigneeUsername();
+                }
+                if (!s3.equals(s4)&&!s4.matches("")) {
                     historyRequestDto.setActionType(3);
-                    historyRequestDto.setWhatHaveBeenChanged(updateTask.getAssigneeUsername().getUsername() + " -> " + newTask.getAssigneeUsername());
+                    historyRequestDto.setWhatHaveBeenChanged(s3 + " -> " + s4);
                     Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
                     if (!check)
                         throw new Exception("Create History in task Failed.");
