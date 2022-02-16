@@ -7,6 +7,7 @@ import mgpt.model.LoginResponseDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.RoleOfUserRepository;
 import mgpt.repository.RoleRepository;
+import mgpt.util.Constant;
 import mgpt.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -87,6 +89,23 @@ public class AccountService implements UserDetailsService {
         mapObj.put("password", account.getPassword());
         mapObj.put("name", account.getName());
         mapObj.put("email", account.getEmail());
+        return ResponseEntity.ok(mapObj);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="get member list in project">
+    public ResponseEntity<?> getMemBerInProject(int projectId) {
+
+        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
+        Account account = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
+        accountList.add(account);
+        List<String> stringList = new ArrayList<>();
+        for (Account account1 : accountList) {
+            stringList.add(account1.getName());
+        }
+
+        HashMap<String, Object> mapObj = new LinkedHashMap<>();
+        mapObj.put("username", stringList);
         return ResponseEntity.ok(mapObj);
     }
     //</editor-fold>

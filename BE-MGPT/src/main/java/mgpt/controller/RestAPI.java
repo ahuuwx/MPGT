@@ -61,11 +61,27 @@ public class RestAPI {
         return accountService.checkLogin(loginRequestDto);
     }
     //</editor-fold>
+
+    //<editor-fold desc="Get member In project">
+
     /**
-    * -------------------------------PROFILE--------------------------------
-    */
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/member-list", method = RequestMethod.GET)
+    public ResponseEntity<?> getMemBerInProject(@RequestParam int projectId) throws Exception {
+        return accountService.getMemBerInProject(projectId);
+    }
+    //</editor-fold>
+
+    /**
+     * -------------------------------PROFILE--------------------------------
+     */
 
     //<editor-fold desc="Get profile">
+
     /**
      *
      * @param username

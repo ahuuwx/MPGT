@@ -30,4 +30,5 @@ public interface AccountRepository extends JpaRepository<Account, String> {
                     "p.projectId=:projectId"
     )
     List<Account> findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(int roleId, int projectId);
+
 }
