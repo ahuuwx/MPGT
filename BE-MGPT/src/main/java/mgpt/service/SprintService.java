@@ -66,14 +66,14 @@ public class SprintService {
     //</editor-fold>
 
     //<editor-fold desc="Create New Sprint">
-    public ResponseEntity<?> createNewSprint(SprintCreatingRequestDto newSprint) throws Exception {
+    public ResponseEntity<?> createNewSprint(int projectId) throws Exception {
         try {
-            Project project = projectRepository.findProjectsByProjectId(newSprint.getProjectId());
+            Project project = projectRepository.findProjectsByProjectId(projectId);
             if (project != null) {
                 Sprint sprint = new Sprint();
-                sprint.setSprintName(newSprint.getSprintName());
-                sprint.setStartDate(newSprint.getStartDate());
-                sprint.setEndDate(convertToTimeEnd(newSprint.getStartDate(), newSprint.getDuration()));
+                List<Sprint> sprintList=sprintRepository.findAllByProjectId_ProjectId(projectId);
+                int countSprint=sprintList.size()+1;
+                sprint.setSprintName(project.getProjectName()+" Sprint "+countSprint);
                 sprint.setProjectId(project);
                 sprintRepository.save(sprint);
                 return ResponseEntity.ok(true);

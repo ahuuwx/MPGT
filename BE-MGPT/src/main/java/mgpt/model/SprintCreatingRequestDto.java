@@ -10,8 +10,5 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 public class SprintCreatingRequestDto {
-    private String sprintName;
-    private Date startDate;
-    private int duration;
     private int projectId;
 }

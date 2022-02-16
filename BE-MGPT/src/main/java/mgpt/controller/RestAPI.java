@@ -117,14 +117,15 @@ public class RestAPI {
     //<editor-fold desc="Create New Sprint">
 
     /**
-     * @param newSprint
+     *
+     * @param projectId
      * @return
      * @throws Exception
      */
     @CrossOrigin
     @RequestMapping(value = "/sprint", method = RequestMethod.POST)
-    public ResponseEntity<?> createNewSprint(@RequestBody SprintCreatingRequestDto newSprint) throws Exception {
-        return sprintService.createNewSprint(newSprint);
+    public ResponseEntity<?> createNewSprint(@RequestParam int projectId) throws Exception {
+        return sprintService.createNewSprint(projectId);
     }
     //</editor-fold>
 
