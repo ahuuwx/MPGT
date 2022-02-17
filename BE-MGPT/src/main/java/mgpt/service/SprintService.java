@@ -118,8 +118,11 @@ public class SprintService {
             } else {
                 Sprint delSprint = sprintRepository.findBySprintId(sprintId);
                 List<Task> taskList = taskRepository.findAllBySprintId_SprintId(sprintId);
+                String backlog="Backlog";
+                Sprint backlogSprint=sprintRepository.findBySprintNameIsLike(backlog);
                 for (Task task : taskList) {
-                    task.setSprintId(null);
+
+                    task.setSprintId(backlogSprint);
                 }
                 sprintRepository.delete(delSprint);
                 return ResponseEntity.ok(Boolean.TRUE);

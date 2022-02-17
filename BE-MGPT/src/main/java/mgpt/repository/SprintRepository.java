@@ -11,4 +11,6 @@ public interface SprintRepository extends JpaRepository<Sprint, Integer> {
     List<Sprint> findAllByProjectId_ProjectId(int projectId);
 
     Sprint findBySprintId(int sprintId);
+
+    Sprint findBySprintNameIsLike(String sprintName);
 }
