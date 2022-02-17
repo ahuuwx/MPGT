@@ -37,7 +37,7 @@ public class TaskComment implements Serializable {
         CommentDto dto=new CommentDto();
         dto.setTaskCommentId(taskCommentId);
         dto.setUsername(Username.getUsername());
-        dto.setName(Username.getUsername());
+        dto.setName(Username.getName());
         dto.setAvatar(getUsername().getAvatar());
         dto.setComment(comment);
         dto.setCreateDate(createDate);
