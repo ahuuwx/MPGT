@@ -11,6 +11,9 @@ import java.util.Date;
 @Data
 public class CommentDto {
     private int taskCommentId;
+    private String username;
+    private String avatar;
+    private String name;
     private String comment;
     private Date createDate;
 }
