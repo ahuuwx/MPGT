@@ -283,6 +283,19 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Delete comment">
+    /**
+     *
+     * @param commentId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task-comment", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteCommentByCommentId(@RequestParam int commentId) throws Exception {
+        return taskCommentService.deleteCommentByCommentId(commentId);
+    }
+    //</editor-fold>
     //<editor-fold desc="View List Comment">
 
     /**

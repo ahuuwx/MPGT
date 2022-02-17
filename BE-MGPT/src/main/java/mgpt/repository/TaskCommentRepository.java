@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TaskCommentRepository extends JpaRepository<TaskComment,Integer> {
     List<TaskComment> findAllByTask_TaskId(int taskId);
+
+    TaskComment findByTaskCommentId(int Id);
 }

@@ -77,6 +77,22 @@ public class TaskCommentService {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Delete Task by Task Id">
+    public ResponseEntity<?> deleteCommentByCommentId(int commentId) {
+        try {
+            if (!taskCommentRepository.existsById(commentId)) {
+                throw new IllegalArgumentException(Constant.INVALID_TASKID);
+            } else {
+                TaskComment delComment = taskCommentRepository.findByTaskCommentId(commentId);
+                taskCommentRepository.delete(delComment);
+                return ResponseEntity.ok(Boolean.TRUE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
 
 
     }
