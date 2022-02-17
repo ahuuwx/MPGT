@@ -38,9 +38,10 @@ public class Constant {
      */
     public static final String INVALID_TASK_STATUS = "INVALID TASK STATUS";
     /**
-     * TASK
+     * TASK COMMENT
      */
     public static final String NULL_TASK_COMMENT = "TASK COMMENT IS NOT NULL";
+    public static final String INVALID_TASK_COMMENT = "TASK COMMENT IS NOT VALID";
     /**
      * SPRINT
      */

@@ -296,6 +296,23 @@ public class RestAPI {
         return taskCommentService.deleteCommentByCommentId(commentId);
     }
     //</editor-fold>
+
+    //<editor-fold desc="Update Comment">
+
+    /**
+     *
+     * @param commentId
+     * @param commentUpdateRequestDto
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/task-comment", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateCommentByCommentId(@RequestParam int commentId,
+                                                @RequestBody CommentUpdateRequestDto commentUpdateRequestDto) throws Exception {
+        return taskCommentService.updateComment(commentId, commentUpdateRequestDto);
+    }
+    //</editor-fold>
     //<editor-fold desc="View List Comment">
 
     /**

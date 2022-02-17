@@ -81,7 +81,7 @@ public class TaskCommentService {
     public ResponseEntity<?> deleteCommentByCommentId(int commentId) {
         try {
             if (!taskCommentRepository.existsById(commentId)) {
-                throw new IllegalArgumentException(Constant.INVALID_TASKID);
+                throw new IllegalArgumentException(Constant.INVALID_TASK_COMMENT);
             } else {
                 TaskComment delComment = taskCommentRepository.findByTaskCommentId(commentId);
                 taskCommentRepository.delete(delComment);
@@ -93,6 +93,24 @@ public class TaskCommentService {
         }
     }
     //</editor-fold>
+
+    public ResponseEntity<?> updateComment(int commentId, CommentUpdateRequestDto commentRequestDto) throws Exception {
+        try{
+            TaskComment taskComment=taskCommentRepository.findByTaskCommentId(commentId);
+            if(commentRequestDto.getCommentText()==null||commentRequestDto.getCommentText().matches(""))
+                throw new Exception(Constant.NULL_TASK_COMMENT);
+            if(taskComment!=null){
+                taskComment.setComment(commentRequestDto.getCommentText());
+                taskCommentRepository.save(taskComment);
+                return ResponseEntity.ok(true);
+            } else
+                throw new Exception(Constant.INVALID_TASK_COMMENT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 
     }
