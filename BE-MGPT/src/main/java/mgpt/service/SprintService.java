@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -91,12 +93,20 @@ public class SprintService {
     public ResponseEntity<?> updateSprint(int sprintId, SprintUpdatingRequestDto updateSprint) throws Exception {
         try{
             Sprint sprint=sprintRepository.findBySprintId(sprintId);
+            ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
+            ZonedDateTime today = ZonedDateTime.now(zoneId);
             if(updateSprint.getSprintName()==null||updateSprint.getSprintName().matches(""))
                 throw new Exception(Constant.NULL_SPRINT_NAME);
             if(sprint!=null){
                 sprint.setSprintName(updateSprint.getSprintName());
-                sprint.setStartDate(updateSprint.getStartDate());
-                sprint.setEndDate(convertToTimeEnd(updateSprint.getStartDate(),updateSprint.getDuration()));
+                //nếu ko update ngày, lúc vừa create xong (date vẫn null, tự động set ngày)
+                if(updateSprint.getStartDate()==null){
+                    sprint.setStartDate(Date.from(today.toInstant()));
+                    sprint.setEndDate(convertToTimeEnd(sprint.getStartDate(),7));
+                }else {
+                    sprint.setStartDate(updateSprint.getStartDate());
+                    sprint.setEndDate(convertToTimeEnd(updateSprint.getStartDate(), updateSprint.getDuration()));
+                }
                 sprintRepository.save(sprint);
                 return ResponseEntity.ok(true);
             } else

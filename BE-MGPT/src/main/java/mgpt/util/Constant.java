@@ -54,4 +54,9 @@ public class Constant {
      * PROJECT
      */
     public static final String INVALID_PROJECT_ID = "INVALID PROJECT ID";
+
+    /**
+     * DATE
+     */
+    public static final String INVALID_STARTDATE_ENDDATE = "START DATE CAN NOT AFTER END DATE";
 }

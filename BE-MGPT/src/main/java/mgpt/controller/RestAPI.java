@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @RestController
 @EnableScheduling
@@ -25,6 +26,8 @@ public class RestAPI {
     TaskCommentService taskCommentService;
     @Autowired
     TaskHistoryService taskHistoryService;
+    @Autowired
+    PermissionOfRoleService permissionOfRoleService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -122,11 +125,18 @@ public class RestAPI {
      * @throws Exception
      */
     @CrossOrigin
-    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    @RequestMapping(value = "/project", params = "projectId",method = RequestMethod.GET)
     public ResponseEntity<?> getProjectDetailByProjectId(@RequestParam(value = "projectId") int projectId) throws Exception {
         return projectService.getProjectDetailByProjectId(projectId);
     }
     //</editor-fold>
+
+        @CrossOrigin
+        @RequestMapping(value = "/project", method = RequestMethod.GET)
+        public ResponseEntity<?> getProjectByDate(@RequestBody ProjectListSearchByDateDto dto,
+                                                  @RequestParam(value = "username") String username) throws Exception {
+            return projectService.getProjectByDate(dto,username);
+        }
     /**
      * -------------------------------SPRINT--------------------------------
      */
@@ -344,5 +354,12 @@ public class RestAPI {
         return taskHistoryService.viewHistoryListInTask(taskId);
     }
     //</editor-fold>
-
+    /**
+     * -------------------------------Permission--------------------------------
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/permission", method = RequestMethod.GET)
+    public ResponseEntity<?> getPermission(@RequestParam(value = "roleId") int roleId) throws Exception {
+        return permissionOfRoleService.getPermission(roleId);
+    }
 }

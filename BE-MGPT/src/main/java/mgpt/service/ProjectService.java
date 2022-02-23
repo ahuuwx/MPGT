@@ -5,6 +5,7 @@ import mgpt.dao.Project;
 import mgpt.dao.ProjectOfUser;
 import mgpt.model.ProjectDetailResponseDto;
 import mgpt.model.ProjectListResponseDto;
+import mgpt.model.ProjectListSearchByDateDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.ProjectOfUserRepository;
 import mgpt.repository.ProjectRepository;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,8 +90,9 @@ public class ProjectService {
                 }
             } else {
                 throw new Exception(Constant.INVALID_USERNAME);
+
             }
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok(Boolean.FALSE);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -127,4 +130,35 @@ public class ProjectService {
         }
     }
     //</editor-fold>
+
+    public ResponseEntity<?> getProjectByDate(ProjectListSearchByDateDto dto, String username) {
+    try{
+        Account account=accountRepository.findAccountByUsername(username);
+        if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
+            if(dto.getStartDate().after(dto.getEndDate())){
+                throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
+            }
+                    List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(username, dto.getStartDate(),dto.getEndDate());
+                    List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
+                    List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
+                    for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
+                        Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        projectListResponseDto1.setLeaderName(accountLeader.getName());
+                        List<String> lecturerName = new ArrayList<>();
+                        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        for (Account accountLecturer : accountList) {
+                            lecturerName.add(accountLecturer.getName());
+                        }
+                        projectListResponseDto1.setLecturerName(lecturerName);
+                    }
+
+                    return ResponseEntity.ok(projectListResponseDto);
+                }
+        throw new Exception(Constant.INVALID_USERNAME);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
+
+
