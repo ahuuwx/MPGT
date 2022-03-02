@@ -12,11 +12,11 @@ public class Constant {
     /**
      * ROLE
      */
-    public static final int LECTURER_ROLE_ID = 2;
-    public static final int ADMIN_ROLE_ID = 1;
-    public static final int PDT_ROLE_ID = 3;
-    public static final int MEMBER_ROLE_ID = 4;
-    public static final int LEADER_ROLE_ID = 5;
+    public static final int LECTURER_ROLE_ID = 1;
+//    public static final int ADMIN_ROLE_ID = 1;
+//    public static final int PDT_ROLE_ID = 3;
+    public static final int MEMBER_ROLE_ID = 2;
+    public static final int LEADER_ROLE_ID = 3;
     public static final String LECTURER_ROLE_NAME = "Lecturer";
     public static final String ADMIN_ROLE_NAME = "Admin";
     public static final String PDT_ROLE_NAME = "PDT";
