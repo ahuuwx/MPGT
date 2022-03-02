@@ -1,11 +1,9 @@
 package mgpt.service;
 
 import mgpt.dao.Account;
-import mgpt.dao.RoleOfUser;
 import mgpt.model.LoginRequestDto;
 import mgpt.model.LoginResponseDto;
 import mgpt.repository.AccountRepository;
-import mgpt.repository.RoleOfUserRepository;
 import mgpt.repository.RoleRepository;
 import mgpt.util.Constant;
 import mgpt.util.JwtUtil;
@@ -34,8 +32,7 @@ public class AccountService implements UserDetailsService {
     AuthenticationManager authenticationManager;
     @Autowired
     AccountRepository accountRepository;
-    @Autowired
-    RoleOfUserRepository roleOfUserRepository;
+
     @Autowired
     RoleRepository roleRepository;
 
@@ -58,12 +55,12 @@ public class AccountService implements UserDetailsService {
             if (account == null || !account.getPassword().matches(loginRequestDto.getPassword())) {
                 throw new Exception("Account is not available");
             }
-            RoleOfUser roleOfUser = roleOfUserRepository.findRoleOfUserByAccount_Username(account.getUsername());
+
 
             LoginResponseDto loginResponseDto = new LoginResponseDto();
             loginResponseDto.setName(account.getName());
             loginResponseDto.setUsername(account.getUsername());
-            loginResponseDto.setRoleName(roleOfUser.getRoleId().getRoleName());
+            loginResponseDto.setRoleName(account.getRole().getRoleName());
             loginResponseDto.setJwt(jwt);
             return ResponseEntity.ok(loginResponseDto);
         } catch (Exception e) {
@@ -96,8 +93,8 @@ public class AccountService implements UserDetailsService {
     //<editor-fold desc="get member list in project">
     public ResponseEntity<?> getMemBerInProject(int projectId) {
 
-        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
-        Account account = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
+        List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
+        Account account = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
         accountList.add(account);
         List<String> stringList = new ArrayList<>();
         for (Account account1 : accountList) {

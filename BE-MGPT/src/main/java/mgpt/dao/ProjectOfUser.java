@@ -21,9 +21,6 @@ public class ProjectOfUser {
     @JoinColumn(name = "username")
     private Account username;
 
-
-
-
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

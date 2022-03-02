@@ -131,12 +131,22 @@ public class RestAPI {
     }
     //</editor-fold>
 
-        @CrossOrigin
+    //<editor-fold desc="Get Project By Date">
+
+    /**
+     *
+     * @param dto
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
         @RequestMapping(value = "/project", method = RequestMethod.GET)
         public ResponseEntity<?> getProjectByDate(@RequestBody ProjectListSearchByDateDto dto,
                                                   @RequestParam(value = "username") String username) throws Exception {
             return projectService.getProjectByDate(dto,username);
         }
+    //</editor-fold>
     /**
      * -------------------------------SPRINT--------------------------------
      */
@@ -357,9 +367,18 @@ public class RestAPI {
     /**
      * -------------------------------Permission--------------------------------
      */
+    //<editor-fold desc="Get Permission">
+
+    /**
+     *
+     * @param roleId
+     * @return
+     * @throws Exception
+     */
     @CrossOrigin
     @RequestMapping(value = "/permission", method = RequestMethod.GET)
     public ResponseEntity<?> getPermission(@RequestParam(value = "roleId") int roleId) throws Exception {
         return permissionOfRoleService.getPermission(roleId);
     }
+    //</editor-fold>
 }

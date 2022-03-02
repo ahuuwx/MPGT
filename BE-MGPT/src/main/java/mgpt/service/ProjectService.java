@@ -38,14 +38,14 @@ public class ProjectService {
                 /**
                  * ROLE: MEMBER
                  */
-                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.MEMBER_ROLE_NAME)) {
+                if (account.getRole().getRoleName().matches(Constant.MEMBER_ROLE_NAME)) {
                     ProjectOfUser projectOfUser = projectOfUserRepository.findProjectOfUserByUsername(account);
                     Project project = projectRepository.findProjectByProjectOfUser_ProjectId(projectOfUser.getProject().getProjectId());
                     ProjectListResponseDto projectListResponseDto = project.convertToProjectDto();
-                    Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectOfUser.getProject().getProjectId());
                     projectListResponseDto.setLeaderName(accountLeader.getName());
                     List<String> lecturerName = new ArrayList<>();
-                    List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
                     for (Account accountLecturer : accountList) {
                         lecturerName.add(accountLecturer.getName());
                     }
@@ -55,13 +55,13 @@ public class ProjectService {
                 /**
                  * ROLE: Leader
                  */
-                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LEADER_ROLE_NAME)) {
+                if (account.getRole().getRoleName().matches(Constant.LEADER_ROLE_NAME)) {
                     ProjectOfUser projectOfUser = projectOfUserRepository.findProjectOfUserByUsername(account);
                     Project project = projectRepository.findProjectByProjectOfUser_ProjectId(projectOfUser.getProject().getProjectId());
                     ProjectListResponseDto projectListResponseDto = project.convertToProjectDto();
                     projectListResponseDto.setLeaderName(account.getName());
                     List<String> lecturerName = new ArrayList<>();
-                    List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
+                    List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectOfUser.getProject().getProjectId());
                     for (Account accountLecturer : accountList) {
                         lecturerName.add(accountLecturer.getName());
                     }
@@ -71,15 +71,15 @@ public class ProjectService {
                 /**
                  * ROLE: Lecturer
                  */
-                if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
+                if (account.getRole().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
                     List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_Username(username);
                     List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
                     List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
                     for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
-                        Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
                         projectListResponseDto1.setLeaderName(accountLeader.getName());
                         List<String> lecturerName = new ArrayList<>();
-                        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
                         for (Account accountLecturer : accountList) {
                             lecturerName.add(accountLecturer.getName());
                         }
@@ -106,15 +106,15 @@ public class ProjectService {
             Project project = projectRepository.findProjectsByProjectId(projectId);
             ProjectDetailResponseDto projectDetailResponseDto = project.convertToProjectDetailDto();
             //query for account leader and lecturer
-            Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
-            List<Account> accountLecturerList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectId);
+            Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);
+            List<Account> accountLecturerList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectId);
             List<String> lecturerNameList = new ArrayList<>();
             for (Account account : accountLecturerList) {
                 lecturerNameList.add(account.getName());
             }
 
             //query for member name list
-            List<Account> accountMemberList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
+            List<Account> accountMemberList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.MEMBER_ROLE_ID, projectId);
             List<String> memberNameList = new ArrayList<>();
             for (Account account : accountMemberList) {
                 memberNameList.add(account.getName());
@@ -131,10 +131,11 @@ public class ProjectService {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Get Prject By Date">
     public ResponseEntity<?> getProjectByDate(ProjectListSearchByDateDto dto, String username) {
     try{
         Account account=accountRepository.findAccountByUsername(username);
-        if (account.getRoleOfUser().getRoleId().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
+        if (account.getRole().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
             if(dto.getStartDate().after(dto.getEndDate())){
                 throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
             }
@@ -142,10 +143,10 @@ public class ProjectService {
                     List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
                     List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
                     for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
-                        Account accountLeader = accountRepository.findAccountByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
                         projectListResponseDto1.setLeaderName(accountLeader.getName());
                         List<String> lecturerName = new ArrayList<>();
-                        List<Account> accountList = accountRepository.findDistinctByRoleOfUser_RoleId_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
+                        List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
                         for (Account accountLecturer : accountList) {
                             lecturerName.add(accountLecturer.getName());
                         }
@@ -159,6 +160,7 @@ public class ProjectService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //</editor-fold>
 }
 
 
