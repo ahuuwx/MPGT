@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,7 +102,7 @@ public class ProjectService {
     public ResponseEntity<?> getProjectDetailByProjectId(int projectId) {
         try {
 
-            Project project = projectRepository.findProjectsByProjectId(projectId);
+            Project project = projectRepository.findByProjectId(projectId);
             ProjectDetailResponseDto projectDetailResponseDto = project.convertToProjectDetailDto();
             //query for account leader and lecturer
             Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectId);

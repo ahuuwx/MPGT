@@ -3,7 +3,6 @@ package mgpt.service;
 import mgpt.dao.Project;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
-import mgpt.model.SprintCreatingRequestDto;
 import mgpt.model.SprintListResponseDto;
 import mgpt.model.SprintUpdatingRequestDto;
 import mgpt.model.TaskSummaryInSprintResponseDto;
@@ -70,7 +69,7 @@ public class SprintService {
     //<editor-fold desc="Create New Sprint">
     public ResponseEntity<?> createNewSprint(int projectId) throws Exception {
         try {
-            Project project = projectRepository.findProjectsByProjectId(projectId);
+            Project project = projectRepository.findByProjectId(projectId);
             if (project != null) {
                 Sprint sprint = new Sprint();
                 List<Sprint> sprintList=sprintRepository.findAllByProjectId_ProjectId(projectId);

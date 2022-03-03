@@ -26,16 +26,18 @@ public class Project {
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
+    @Column(name = "image")
+    private String image;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Sprint> sprintList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Meeting> meetingList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ProjectOfUser> projectOfUserList;
 

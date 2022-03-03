@@ -217,6 +217,7 @@ public class TaskService {
                 taskDetailResponseDto.setCreateDate(task.getCreateDate());
                 taskDetailResponseDto.setUpdateDate(task.getUpdateDate());
                 taskDetailResponseDto.setStatusId(task.getStatusId().getStatusId());
+                taskDetailResponseDto.setFileUrl(task.getFileUrl());
                 taskDetailResponseDto.setSprint(task.getSprintId().convertToSprintDto());
                 //Comment
                 List<TaskComment> taskCommentList=taskCommentRepository.findAllByTask_TaskId(taskId);

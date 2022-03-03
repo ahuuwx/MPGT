@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 @RestController
 @EnableScheduling
@@ -28,6 +28,8 @@ public class RestAPI {
     TaskHistoryService taskHistoryService;
     @Autowired
     PermissionOfRoleService permissionOfRoleService;
+    @Autowired
+    FireBaseService fireBaseService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -379,6 +381,19 @@ public class RestAPI {
     @RequestMapping(value = "/permission", method = RequestMethod.GET)
     public ResponseEntity<?> getPermission(@RequestParam(value = "roleId") int roleId) throws Exception {
         return permissionOfRoleService.getPermission(roleId);
+    }
+    //</editor-fold>
+
+    /**
+     * -------------------------------FireBase--------------------------------
+     */
+    //<editor-fold desc="Upload Image via Firebase">
+    @CrossOrigin
+    @RequestMapping(value = "/upload-file", method = RequestMethod.POST)
+
+    public ResponseEntity<?> upload(@RequestParam(value = "file") MultipartFile file,
+                                    @RequestParam(value = "taskId") int taskId) throws Exception {
+        return fireBaseService.uploadToThisMachine(file, taskId);
     }
     //</editor-fold>
 }

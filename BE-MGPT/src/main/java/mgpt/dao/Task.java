@@ -23,6 +23,8 @@ public class Task {
     private String taskName;
     @Column(name = "task_description")
     private String taskDescription;
+    @Column(name = "file_url")
+    private String fileUrl;
 
     @ManyToOne
     @JoinColumn(name = "creator_username")

@@ -19,6 +19,7 @@ public class TaskDetailResponseDto {
     private Date createDate;
     private Date updateDate;
     private int statusId;
+    private String fileUrl;
     private SprintDto sprint;
     private List<CommentDto> comment;
     private List<HistoryDto> history;
