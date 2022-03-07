@@ -27,6 +27,8 @@ public class Sprint {
     private Date endDate;
     @Column(name = "score")
     private float score;
+    @Column(name = "file_url")
+    private String fileUrl;
 
     @ManyToOne
     @JoinColumn(name = "project_id")

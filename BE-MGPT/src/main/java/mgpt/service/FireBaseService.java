@@ -6,7 +6,9 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.auth.FirebaseAuthException;
+import mgpt.dao.Sprint;
 import mgpt.dao.Task;
+import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
 import mgpt.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,10 @@ public class FireBaseService {
     StorageOptions storageOptions;
     @Autowired
     TaskRepository taskRepository;
+    @Autowired
+    SprintRepository sprintRepository;
 
+    //<editor-fold desc="Upload file in task">
     //luu file tu post man ve may
     public ResponseEntity<?> uploadToThisMachine(List<MultipartFile> fileUp, int taskId) throws IOException, FirebaseAuthException {
         try {
@@ -64,6 +69,42 @@ public class FireBaseService {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getCause());
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="upload file in sprint">
+    public ResponseEntity<?> uploadToThisMachineInSprint(List<MultipartFile> fileUp, int sprintId) throws IOException, FirebaseAuthException {
+        try {
+            //tạo sẵn thư mục uploads, r sau đó code lấy tới url của file
+            Path currentRelativePath = Paths.get("uploads");
+
+            String s = currentRelativePath.toAbsolutePath().toString();
+            List<String> stringList = new ArrayList<>();
+            //de luu file voi root va ten file
+            for (MultipartFile multipartFile : fileUp) {
+                String root = s + "\\" + multipartFile.getOriginalFilename();
+                String fileName = multipartFile.getOriginalFilename();
+
+                //chuyen tu multipartFile qua file
+                multipartFile = new org.springframework.mock.web.MockMultipartFile(String.valueOf(fileUp), multipartFile.getBytes());
+                File file = new File(root, multipartFile.getOriginalFilename());
+                multipartFile.transferTo(file);
+
+                stringList.add(this.uploadFile(file, fileName));
+                file.delete();
+
+                Sprint sprint = sprintRepository.findBySprintId(sprintId);
+                sprint.setFileUrl(stringList.toString());
+                sprintRepository.save(sprint);
+            }
+
+            return ResponseEntity.ok(stringList);
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getCause());
+        }
+    }
+    //</editor-fold>
+
 
     //<editor-fold desc="Upload File">
     private String uploadFile(File file, String fileName) throws IOException {

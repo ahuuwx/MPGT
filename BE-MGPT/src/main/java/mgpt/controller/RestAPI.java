@@ -211,6 +211,24 @@ public class RestAPI {
         return sprintService.getSprintsByProject(projectId);
     }
     //</editor-fold>
+
+    //<editor-fold desc="Upload File File In Sprint By Leader">
+    /**
+     *
+     * @param file
+     * @param sprintId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/leader-review-sprint", method = RequestMethod.POST)
+
+    public ResponseEntity<?> uploadFileInSprintByLeader(@RequestParam(value = "file") List<MultipartFile> file,
+                                    @RequestParam(value = "sprintId") int sprintId) throws Exception {
+        return fireBaseService.uploadToThisMachineInSprint(file, sprintId);
+    }
+    //</editor-fold>
+
     /**
      * -------------------------------TASK--------------------------------
      */
