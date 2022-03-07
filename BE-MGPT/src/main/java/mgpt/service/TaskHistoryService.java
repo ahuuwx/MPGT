@@ -2,9 +2,9 @@ package mgpt.service;
 
 import mgpt.dao.Account;
 import mgpt.dao.Task;
-import mgpt.dao.TaskComment;
 import mgpt.dao.TaskHistory;
-import mgpt.model.*;
+import mgpt.model.HistoryDto;
+import mgpt.model.TaskHistoryRequestDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.TaskHistoryRepository;
 import mgpt.repository.TaskRepository;
@@ -31,35 +31,34 @@ public class TaskHistoryService {
 
     //<editor-fold desc="Create History In Task">
     public Boolean createNewHistoryInTask(TaskHistoryRequestDto newHistory) throws Exception {
-        try{
-            Account account=accountRepository.findAccountByUsername(newHistory.getUsername());
-            Task task=taskRepository.findByTaskId(newHistory.getTaskId());
+        try {
+            Account account = accountRepository.findAccountByUsername(newHistory.getUsername());
+            Task task = taskRepository.findByTaskId(newHistory.getTaskId());
             ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
             ZonedDateTime today = ZonedDateTime.now(zoneId);
-            if(account!=null){
-                if(task==null)
+            if (account != null) {
+                if (task == null)
                     throw new Exception(Constant.INVALID_TASKID);
 
-                TaskHistory taskHistory=new TaskHistory();
+                TaskHistory taskHistory = new TaskHistory();
                 taskHistory.setUsername(account);
                 taskHistory.setActionDate(Date.from(today.toInstant()));
-                if(newHistory.getActionType()==1){
-                    taskHistory.setActionDescription(account.getUsername()+" created the Issue.");
+                if (newHistory.getActionType() == 1) {
+                    taskHistory.setActionDescription(account.getUsername() + " created the Issue.");
                 }
-                if(newHistory.getActionType()==2){
-                    taskHistory.setActionDescription(account.getUsername()+" changed the Task's Name: "+newHistory.getWhatHaveBeenChanged());
+                if (newHistory.getActionType() == 2) {
+                    taskHistory.setActionDescription(account.getUsername() + " changed the Task's Name: " + newHistory.getWhatHaveBeenChanged());
                 }
-                if(newHistory.getActionType()==3){
-                    taskHistory.setActionDescription(account.getUsername()+" changed the Assignee: "+ newHistory.getWhatHaveBeenChanged());
+                if (newHistory.getActionType() == 3) {
+                    taskHistory.setActionDescription(account.getUsername() + " changed the Assignee: " + newHistory.getWhatHaveBeenChanged());
                 }
-                if(newHistory.getActionType()==4){
-                    taskHistory.setActionDescription(account.getUsername()+" changed the status: "+ newHistory.getWhatHaveBeenChanged());
+                if (newHistory.getActionType() == 4) {
+                    taskHistory.setActionDescription(account.getUsername() + " changed the status: " + newHistory.getWhatHaveBeenChanged());
                 }
                 taskHistory.setTask(task);
                 taskHistoryRepository.save(taskHistory);
                 return true;
-            }else
-            {
+            } else {
                 throw new Exception(Constant.INVALID_USERNAME);
             }
         } catch (Exception e) {

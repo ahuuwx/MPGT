@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mgpt.model.HistoryDto;
-import mgpt.model.TaskHistoryListResponseDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,13 +32,13 @@ public class TaskHistory implements Serializable {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    public HistoryDto convertToHistoryList(){
-        HistoryDto dto=new HistoryDto();
+    public HistoryDto convertToHistoryList() {
+        HistoryDto dto = new HistoryDto();
         dto.setTaskHistoryId(taskHistoryId);
         dto.setActionDescription(actionDescription);
         dto.setActionDate(actionDate);
         dto.setUsername(Username.getUsername());
         dto.setName(Username.getName());
-    return dto;
+        return dto;
     }
 }

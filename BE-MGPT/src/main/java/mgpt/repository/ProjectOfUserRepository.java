@@ -15,6 +15,7 @@ public interface ProjectOfUserRepository extends JpaRepository<ProjectOfUser, In
 
     //xét từng start date với sd và ed với ed
     List<ProjectOfUser> findProjectOfUserByUsername_UsernameAndProject_StartDateLessThanEqualAndProject_EndDateGreaterThanEqual(String username, Date startDate, Date endDate);
+
     //xét giữa sd và khoảng thời gian ng dùng tìm kiếm có prj nào start ko
     List<ProjectOfUser> findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(String username, Date startDate, Date endDate);
 

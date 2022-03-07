@@ -32,7 +32,7 @@ public class Account implements Serializable {
     private String avatar;
 
     @ManyToOne
-    @JoinColumn(name="role_id")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany(mappedBy = "creatorUsername")
@@ -42,7 +42,6 @@ public class Account implements Serializable {
 
     @OneToMany(mappedBy = "username")
     private List<ProjectOfUser> projectOfUserList;
-
 
 
     public AccountSummaryDto converToAccountSummaryDto() {

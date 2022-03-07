@@ -23,45 +23,44 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FireBaseService {
     StorageOptions storageOptions;
     @Autowired
-    FilesStorageService storageService;
-    @Autowired
     TaskRepository taskRepository;
 
-    private String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf("."));
-    }
-
     //luu file tu post man ve may
-    public ResponseEntity<?> uploadToThisMachine(MultipartFile fileUp, int taskId) throws IOException, FirebaseAuthException {
-        boolean result = false;
+    public ResponseEntity<?> uploadToThisMachine(List<MultipartFile> fileUp, int taskId) throws IOException, FirebaseAuthException {
         try {
             //tạo sẵn thư mục uploads, r sau đó code lấy tới url của file
             Path currentRelativePath = Paths.get("uploads");
 
             String s = currentRelativePath.toAbsolutePath().toString();
-            String root = s + "\\" + fileUp.getOriginalFilename();
-            String fileName = fileUp.getOriginalFilename();
+            List<String> stringList = new ArrayList<>();
+            //de luu file voi root va ten file
+            for (MultipartFile multipartFile : fileUp) {
+                String root = s + "\\" + multipartFile.getOriginalFilename();
+                String fileName = multipartFile.getOriginalFilename();
 
-            //chuyen tu multipartFile qua file
-            fileUp = new org.springframework.mock.web.MockMultipartFile(String.valueOf(fileUp), fileUp.getBytes());
-            File file = new File(root, fileUp.getOriginalFilename());
-            fileUp.transferTo(file);
+                //chuyen tu multipartFile qua file
+                multipartFile = new org.springframework.mock.web.MockMultipartFile(String.valueOf(fileUp), multipartFile.getBytes());
+                File file = new File(root, multipartFile.getOriginalFilename());
+                multipartFile.transferTo(file);
 
-            String tempURL = this.uploadFile(file, fileName);
-            file.delete();
+                stringList.add(this.uploadFile(file, fileName));
+                file.delete();
 
-            Task task = taskRepository.findByTaskId(taskId);
-            task.setFileUrl(tempURL);
-            taskRepository.save(task);
+                Task task = taskRepository.findByTaskId(taskId);
+                task.setFileUrl(stringList.toString());
+                taskRepository.save(task);
+            }
 
-            return ResponseEntity.ok(tempURL);
+            return ResponseEntity.ok(stringList);
         } catch (Exception e) {
-            String message = "Could not upload the file: " + fileUp.getName() + "!";
+
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getCause());
         }
     }

@@ -111,8 +111,8 @@ public class TaskService {
                  * Get action Type
                  */
                 //change Task Name
-                String s1=updateTask.getTaskName();
-                String s2= newTask.getTaskName();
+                String s1 = updateTask.getTaskName();
+                String s2 = newTask.getTaskName();
                 if (!s1.equals(s2)) {
                     historyRequestDto.setActionType(2);
                     historyRequestDto.setWhatHaveBeenChanged(updateTask.getTaskName() + " -> " + newTask.getTaskName());
@@ -123,19 +123,19 @@ public class TaskService {
                 }
                 //change assignee
 
-                String s3=new String();
-                if(updateTask.getAssigneeUsername()==null){
-                    s3="";
-                }else {
+                String s3 = "";
+                if (updateTask.getAssigneeUsername() == null) {
+                    s3 = "";
+                } else {
                     s3 = updateTask.getAssigneeUsername().getUsername();
                 }
-                String s4=new String();
-                if(newTask.getActorUsername()==null){
-                    s4="";
-                }else {
+                String s4 = "";
+                if (newTask.getActorUsername() == null) {
+                    s4 = "";
+                } else {
                     s4 = newTask.getAssigneeUsername();
                 }
-                if (!s3.equals(s4)&&!s4.matches("")) {
+                if (!s3.equals(s4) && !s4.matches("")) {
                     historyRequestDto.setActionType(3);
                     historyRequestDto.setWhatHaveBeenChanged(s3 + " -> " + s4);
                     Boolean check = taskHistoryService.createNewHistoryInTask(historyRequestDto);
@@ -143,8 +143,8 @@ public class TaskService {
                         throw new Exception("Create History in task Failed.");
                 }
                 //change status
-                int t1=updateTask.getStatusId().getStatusId();
-                int t2= newTask.getStatusId();
+                int t1 = updateTask.getStatusId().getStatusId();
+                int t2 = newTask.getStatusId();
                 if (t1 != t2) {
                     historyRequestDto.setActionType(4);
                     historyRequestDto.setWhatHaveBeenChanged(updateTask.getStatusId().getStatusName() + " -> " + taskStatus.getStatusName());
@@ -157,18 +157,9 @@ public class TaskService {
                  *
                  */
                 //</editor-fold>
-                if (assigneeAccount == null)
-                    updateTask.setAssigneeUsername(null);
-                else
-                    updateTask.setAssigneeUsername(assigneeAccount);
-                if (taskStatus == null)
-                    updateTask.setStatusId(null);
-                else
-                    updateTask.setStatusId(taskStatus);
-                if (sprint == null)
-                    updateTask.setSprintId(null);
-                else
-                    updateTask.setSprintId(sprint);
+                updateTask.setAssigneeUsername(assigneeAccount);
+                updateTask.setStatusId(taskStatus);
+                updateTask.setSprintId(sprint);
 
                 updateTask.setTaskName(newTask.getTaskName());
                 taskRepository.save(updateTask);
@@ -220,8 +211,8 @@ public class TaskService {
                 taskDetailResponseDto.setFileUrl(task.getFileUrl());
                 taskDetailResponseDto.setSprint(task.getSprintId().convertToSprintDto());
                 //Comment
-                List<TaskComment> taskCommentList=taskCommentRepository.findAllByTask_TaskId(taskId);
-                List<CommentDto> commentDtos=taskCommentList.stream().map(taskComment -> taskComment.convertToTaskCommentListDto()).collect(Collectors.toList());
+                List<TaskComment> taskCommentList = taskCommentRepository.findAllByTask_TaskId(taskId);
+                List<CommentDto> commentDtos = taskCommentList.stream().map(taskComment -> taskComment.convertToTaskCommentListDto()).collect(Collectors.toList());
                 taskDetailResponseDto.setComment(commentDtos);
                 //History
                 List<TaskHistory> taskHistoryList = taskHistoryRepository.findAllByTask_TaskId(taskId);

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TaskHistoryRepository extends JpaRepository<TaskHistory,Integer> {
-    List<TaskHistory>findAllByTask_TaskId(int taskId);
+public interface TaskHistoryRepository extends JpaRepository<TaskHistory, Integer> {
+    List<TaskHistory> findAllByTask_TaskId(int taskId);
 }

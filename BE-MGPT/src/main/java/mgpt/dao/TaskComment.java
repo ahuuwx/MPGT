@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import mgpt.model.CommentDto;
-import mgpt.model.TaskCommentListResponseDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,8 +32,8 @@ public class TaskComment implements Serializable {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    public CommentDto convertToTaskCommentListDto(){
-        CommentDto dto=new CommentDto();
+    public CommentDto convertToTaskCommentListDto() {
+        CommentDto dto = new CommentDto();
         dto.setTaskCommentId(taskCommentId);
         dto.setUsername(Username.getUsername());
         dto.setName(Username.getName());

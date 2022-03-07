@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @RestController
 @EnableScheduling
@@ -388,10 +389,17 @@ public class RestAPI {
      * -------------------------------FireBase--------------------------------
      */
     //<editor-fold desc="Upload Image via Firebase">
+
+    /**
+     * @param file
+     * @param taskId
+     * @return
+     * @throws Exception
+     */
     @CrossOrigin
     @RequestMapping(value = "/upload-file", method = RequestMethod.POST)
 
-    public ResponseEntity<?> upload(@RequestParam(value = "file") MultipartFile file,
+    public ResponseEntity<?> upload(@RequestParam(value = "file") List<MultipartFile> file,
                                     @RequestParam(value = "taskId") int taskId) throws Exception {
         return fireBaseService.uploadToThisMachine(file, taskId);
     }

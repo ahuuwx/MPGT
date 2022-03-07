@@ -132,31 +132,31 @@ public class ProjectService {
 
     //<editor-fold desc="Get Prject By Date">
     public ResponseEntity<?> getProjectByDate(ProjectListSearchByDateDto dto, String username) {
-    try{
-        Account account=accountRepository.findAccountByUsername(username);
-        if (account.getRole().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
-            if(dto.getStartDate().after(dto.getEndDate())){
-                throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
-            }
-                    List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(username, dto.getStartDate(),dto.getEndDate());
-                    List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
-                    List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
-                    for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
-                        Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
-                        projectListResponseDto1.setLeaderName(accountLeader.getName());
-                        List<String> lecturerName = new ArrayList<>();
-                        List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
-                        for (Account accountLecturer : accountList) {
-                            lecturerName.add(accountLecturer.getName());
-                        }
-                        projectListResponseDto1.setLecturerName(lecturerName);
-                    }
-
-                    return ResponseEntity.ok(projectListResponseDto);
+        try {
+            Account account = accountRepository.findAccountByUsername(username);
+            if (account.getRole().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
+                if (dto.getStartDate().after(dto.getEndDate())) {
+                    throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
                 }
-        throw new Exception(Constant.INVALID_USERNAME);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+                List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(username, dto.getStartDate(), dto.getEndDate());
+                List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
+                List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
+                for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {
+                    Account accountLeader = accountRepository.findAccountByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LEADER_ROLE_ID, projectListResponseDto1.getProjectId());
+                    projectListResponseDto1.setLeaderName(accountLeader.getName());
+                    List<String> lecturerName = new ArrayList<>();
+                    List<Account> accountList = accountRepository.findDistinctByRole_RoleIdAndProjectOfUser_Project_ProjectId(Constant.LECTURER_ROLE_ID, projectListResponseDto1.getProjectId());
+                    for (Account accountLecturer : accountList) {
+                        lecturerName.add(accountLecturer.getName());
+                    }
+                    projectListResponseDto1.setLecturerName(lecturerName);
+                }
+
+                return ResponseEntity.ok(projectListResponseDto);
+            }
+            throw new Exception(Constant.INVALID_USERNAME);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
     //</editor-fold>

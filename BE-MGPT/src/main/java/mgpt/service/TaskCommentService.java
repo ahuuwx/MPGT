@@ -1,10 +1,11 @@
 package mgpt.service;
 
 import mgpt.dao.Account;
-import mgpt.dao.Sprint;
 import mgpt.dao.Task;
 import mgpt.dao.TaskComment;
-import mgpt.model.*;
+import mgpt.model.CommentDto;
+import mgpt.model.CommentUpdateRequestDto;
+import mgpt.model.TaskCommentRequestDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.TaskCommentRepository;
 import mgpt.repository.TaskRepository;
@@ -31,31 +32,30 @@ public class TaskCommentService {
 
     //<editor-fold desc="Create New Comment">
     public ResponseEntity<?> createNewCommentInTask(TaskCommentRequestDto newComment) throws Exception {
-    try{
-        Account account=accountRepository.findAccountByUsername(newComment.getUsername());
-        Task task=taskRepository.findByTaskId(newComment.getTaskId());
-        ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
-        ZonedDateTime today = ZonedDateTime.now(zoneId);
-        if(account!=null){
-            if(task==null)
-                throw new Exception(Constant.INVALID_TASKID);
-            if(newComment.getComment()==null)
-                throw new Exception(Constant.NULL_TASK_COMMENT);
-            TaskComment taskComment=new TaskComment();
-            taskComment.setUsername(account);
-            taskComment.setComment(newComment.getComment());
-            taskComment.setCreateDate(Date.from(today.toInstant()));
-            taskComment.setTask(task);
-            taskCommentRepository.save(taskComment);
-            return ResponseEntity.ok(true);
-        }else
-        {
-            throw new Exception(Constant.INVALID_USERNAME);
+        try {
+            Account account = accountRepository.findAccountByUsername(newComment.getUsername());
+            Task task = taskRepository.findByTaskId(newComment.getTaskId());
+            ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
+            ZonedDateTime today = ZonedDateTime.now(zoneId);
+            if (account != null) {
+                if (task == null)
+                    throw new Exception(Constant.INVALID_TASKID);
+                if (newComment.getComment() == null)
+                    throw new Exception(Constant.NULL_TASK_COMMENT);
+                TaskComment taskComment = new TaskComment();
+                taskComment.setUsername(account);
+                taskComment.setComment(newComment.getComment());
+                taskComment.setCreateDate(Date.from(today.toInstant()));
+                taskComment.setTask(task);
+                taskCommentRepository.save(taskComment);
+                return ResponseEntity.ok(true);
+            } else {
+                throw new Exception(Constant.INVALID_USERNAME);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-    }
     }
     //</editor-fold>
 
@@ -95,11 +95,11 @@ public class TaskCommentService {
     //</editor-fold>
 
     public ResponseEntity<?> updateComment(int commentId, CommentUpdateRequestDto commentRequestDto) throws Exception {
-        try{
-            TaskComment taskComment=taskCommentRepository.findByTaskCommentId(commentId);
-            if(commentRequestDto.getCommentText()==null||commentRequestDto.getCommentText().matches(""))
+        try {
+            TaskComment taskComment = taskCommentRepository.findByTaskCommentId(commentId);
+            if (commentRequestDto.getCommentText() == null || commentRequestDto.getCommentText().matches(""))
                 throw new Exception(Constant.NULL_TASK_COMMENT);
-            if(taskComment!=null){
+            if (taskComment != null) {
                 taskComment.setComment(commentRequestDto.getCommentText());
                 taskCommentRepository.save(taskComment);
                 return ResponseEntity.ok(true);
@@ -113,4 +113,4 @@ public class TaskCommentService {
     }
 
 
-    }
+}

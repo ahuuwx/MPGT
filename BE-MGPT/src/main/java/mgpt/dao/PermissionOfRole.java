@@ -23,15 +23,15 @@ public class PermissionOfRole {
     private Permission permission;
 
     @OneToOne
-    @JoinColumn(name="role_id")
+    @JoinColumn(name = "role_id")
     private Role roleId;
 
-    public PermissionDto convertToDto(){
-        PermissionDto permissionDto=new PermissionDto();
+    public PermissionDto convertToDto() {
+        PermissionDto permissionDto = new PermissionDto();
         permissionDto.setPermission(permission.getPermission());
         permissionDto.setRoleName(roleId.getRoleName());
         permissionDto.setTrue(true);
-        return  permissionDto;
+        return permissionDto;
     }
 
 }
