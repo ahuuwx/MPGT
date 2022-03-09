@@ -48,6 +48,7 @@ public class ProjectService {
                     for (Account accountLecturer : accountList) {
                         lecturerName.add(accountLecturer.getName());
                     }
+                    projectListResponseDto.setSemester(project.getSemester());
                     projectListResponseDto.setLecturerName(lecturerName);
                     return ResponseEntity.ok(projectListResponseDto);
                 }
@@ -64,6 +65,7 @@ public class ProjectService {
                     for (Account accountLecturer : accountList) {
                         lecturerName.add(accountLecturer.getName());
                     }
+                    projectListResponseDto.setSemester(project.getSemester());
                     projectListResponseDto.setLecturerName(lecturerName);
                     return ResponseEntity.ok(projectListResponseDto);
                 }
@@ -82,6 +84,7 @@ public class ProjectService {
                         for (Account accountLecturer : accountList) {
                             lecturerName.add(accountLecturer.getName());
                         }
+                        
                         projectListResponseDto1.setLecturerName(lecturerName);
                     }
 

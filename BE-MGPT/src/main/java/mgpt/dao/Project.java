@@ -28,6 +28,8 @@ public class Project {
     private Date endDate;
     @Column(name = "image")
     private String image;
+    @Column(name = "semester")
+    private int semester;
 
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -46,6 +48,7 @@ public class Project {
         ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto();
         projectListResponseDto.setProjectId(projectId);
         projectListResponseDto.setProjectName(projectName);
+        projectListResponseDto.setSemester(semester);
         return projectListResponseDto;
     }
     // </editor-fold>
