@@ -98,7 +98,7 @@ public class AccountService implements UserDetailsService {
         accountList.add(account);
         List<String> stringList = new ArrayList<>();
         for (Account account1 : accountList) {
-            stringList.add(account1.getName());
+            stringList.add(account1.getUsername());
         }
 
         HashMap<String, Object> mapObj = new LinkedHashMap<>();
