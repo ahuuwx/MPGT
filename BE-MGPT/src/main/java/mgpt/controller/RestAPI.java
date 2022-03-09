@@ -229,6 +229,27 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Review Sprint By Lecturer">
+
+    /**
+     *
+     * @param sprintId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/sprint-detail", method = RequestMethod.GET)
+    public ResponseEntity<?> getSprintDetail(@RequestParam(value = "sprintId") int sprintId) throws Exception {
+        return sprintService.getSprintDetail(sprintId);
+    }
+    //</editor-fold>
+
+    @CrossOrigin
+    @RequestMapping(value = "/lecturer-review-sprint", method = RequestMethod.POST)
+    public ResponseEntity<?> reviewSprintByLecturer(@RequestParam(value = "sprintId") int sprintId,
+                                                    @RequestParam float score) throws Exception {
+        return sprintService.reviewSprintByLecturer(sprintId,score);
+    }
     /**
      * -------------------------------TASK--------------------------------
      */

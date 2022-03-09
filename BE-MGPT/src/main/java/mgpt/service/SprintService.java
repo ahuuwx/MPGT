@@ -1,27 +1,22 @@
 package mgpt.service;
 
-import mgpt.dao.Project;
-import mgpt.dao.Sprint;
-import mgpt.dao.Task;
-import mgpt.model.SprintListResponseDto;
-import mgpt.model.SprintUpdatingRequestDto;
-import mgpt.model.TaskSummaryInSprintResponseDto;
+import mgpt.dao.*;
+import mgpt.model.*;
 import mgpt.repository.ProjectRepository;
 import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
+import mgpt.repository.TaskStatusRepository;
 import mgpt.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +27,9 @@ public class SprintService {
     TaskRepository taskRepository;
     @Autowired
     ProjectRepository projectRepository;
-    SimpleDateFormat sdf = new SimpleDateFormat(Constant.DATE_PATTERN);
+    @Autowired
+    TaskStatusRepository taskStatusRepository;
+
 
     //<editor-fold desc="Get Sprint List By Project">
     public ResponseEntity<?> getSprintsByProject(int projectId) {
@@ -56,8 +53,6 @@ public class SprintService {
     //<editor-fold desc="Convert to Date End">
     public Date convertToTimeEnd(Date timeStart, int duration) throws ParseException {
         Date timeEnd;
-
-        //Date d = sdf.parse(timeStart);
         Calendar cal = Calendar.getInstance();
         cal.setTime(timeStart);
         cal.add(Calendar.DATE, duration);
@@ -142,4 +137,71 @@ public class SprintService {
         }
     }
     //</editor-fold>
+
+    public ResponseEntity<?> getSprintDetail(int sprintId) {
+        try {
+            Sprint sprint = sprintRepository.findBySprintId(sprintId);
+            if (sprint == null) {
+                throw new Exception(Constant.INVALID_SPRINT);
+            } else {
+                SprintReviewResponseDto dto=new SprintReviewResponseDto();
+                dto.setSprintName(sprint.getSprintName());
+                dto.setFileUrl(sprint.getFileUrl());
+                dto.setScore(sprint.getScore());
+                //tính phần trăm từng task có trong taskstatus có trong sprint
+                Map<String, String> map=new HashMap<String,String>();
+                //ví dụ có 3 task status
+                List<TaskStatus> taskStatusList=taskStatusRepository.findAll();
+                //tất cả tasks có trong sprint đều trong list này
+                List<Task> taskAllStatusList=taskRepository.findAllBySprintId_SprintIdAndStatusIdIsIn(sprintId,taskStatusList);
+                //get size of task with all status (big size)
+                double size=taskAllStatusList.size();
+                int numberOfTask= (int) size;
+                dto.setNumberOfTask(numberOfTask);
+                //với mỗi status, lặp lại vòng for bao nhiều lần,
+                // tìm theo từng status vòng for theo status có trong list status
+                //ví dụ có 3 status sẽ lặp lại ba lần và get list từng tasks với từng status
+                if(numberOfTask!=0) {
+                    //nếu tổng size task khác 0 thì vào for, nếu chưa có task thì tính chi
+                    for (TaskStatus taskStatus : taskStatusList) {
+                        List<Task> tasksCount = taskRepository.findAllBySprintId_SprintIdAndStatusId_StatusName(sprintId, taskStatus.getStatusName());
+                        double sizeInnerTaskList = tasksCount.size();
+                        double percent = (sizeInnerTaskList / size);
+                        //hàm put trong hashmap bao gồm key và value, mỗi key sẽ có value riêng
+                        //nếu nhập vào key trùng sẽ lấy value sau, value trước sẽ đc trả về
+                        NumberFormat numEN = NumberFormat.getPercentInstance();
+                        String percentageEN = numEN.format(percent);
+                        map.put(taskStatus.getStatusName(), percentageEN);
+
+                    }
+                    dto.setPercent(map);
+                }
+                else
+                    dto.setPercent(null);
+
+
+                return ResponseEntity.ok(dto);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> reviewSprintByLecturer(int sprintId, float score) throws Exception {
+        try {
+            Sprint sprint = sprintRepository.findBySprintId(sprintId);
+            if (sprint == null)
+                throw new Exception(Constant.INVALID_SPRINT);
+            else {
+                sprint.setScore(score);
+                sprintRepository.save(sprint);
+                return ResponseEntity.ok(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
