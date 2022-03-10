@@ -15,5 +15,6 @@ public class SprintListResponseDto {
     private String sprintName;
     private Date startDate;
     private Date endDate;
+    private String fileUrl;
     private List<TaskSummaryInSprintResponseDto> taskList;
 }
