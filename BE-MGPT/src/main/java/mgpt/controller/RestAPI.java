@@ -51,6 +51,7 @@ public class RestAPI {
         return "Welcome to MPGT - Manage the progress of the graduation thesis.!\n" + ZonedDateTime.now();
     }
     //</editor-fold>
+
     /**
      * -------------------------------ACCOUNT--------------------------------
      */
@@ -105,9 +106,11 @@ public class RestAPI {
         return accountService.getProfileByUsername(username);
     }
     //</editor-fold>
+
     /**
      * -------------------------------PROJECT--------------------------------
      */
+
     //<editor-fold desc="1.3 Get Project List">
 
     /**
@@ -153,9 +156,11 @@ public class RestAPI {
             return projectService.getProjectByDate(dto,username);
         }
     //</editor-fold>
+
     /**
      * -------------------------------SPRINT--------------------------------
      */
+
     //<editor-fold desc="Create New Sprint">
 
     /**
@@ -171,8 +176,6 @@ public class RestAPI {
     }
     //</editor-fold>
 
-    //<editor-fold desc="update Sprint">
-
     //<editor-fold desc="Delete Sprint">
 
     /**
@@ -187,6 +190,7 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Update Sprint">
     /**
      * @param sprintId
      * @param updateSprint
@@ -232,7 +236,7 @@ public class RestAPI {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Review Sprint By Lecturer">
+    //<editor-fold desc="Get Sprint Review Detail">
 
     /**
      *
@@ -247,12 +251,29 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Review Sprint By Lecturer">
     @CrossOrigin
     @RequestMapping(value = "/lecturer-review-sprint", method = RequestMethod.POST)
     public ResponseEntity<?> reviewSprintByLecturer(@RequestParam(value = "sprintId") int sprintId,
                                                     @RequestParam float score) throws Exception {
         return sprintService.reviewSprintByLecturer(sprintId,score);
     }
+    //</editor-fold>
+
+    //<editor-fold desc="update sprint review, set fileUrl to null">
+    /**
+     *
+     * @param sprintId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/review-sprint", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateSprintReviewBySprintId(@RequestParam int sprintId) throws Exception {
+        return sprintService.updateSprintReviewBySprintId(sprintId);
+    }
+    //</editor-fold>
+
     /**
      * -------------------------------TASK--------------------------------
      */
@@ -378,6 +399,7 @@ public class RestAPI {
         return taskCommentService.updateComment(commentId, commentUpdateRequestDto);
     }
     //</editor-fold>
+
     //<editor-fold desc="View List Comment">
 
     /**
@@ -392,9 +414,11 @@ public class RestAPI {
         return taskCommentService.viewCommentListInTask(taskId);
     }
     //</editor-fold>
+
     /**
      * -------------------------------History--------------------------------
      */
+
     //<editor-fold desc="View History List">
 
     /**
@@ -409,9 +433,11 @@ public class RestAPI {
         return taskHistoryService.viewHistoryListInTask(taskId);
     }
     //</editor-fold>
+
     /**
      * -------------------------------Permission--------------------------------
      */
+
     //<editor-fold desc="Get Permission">
 
     /**
@@ -430,6 +456,7 @@ public class RestAPI {
     /**
      * -------------------------------FireBase--------------------------------
      */
+
     //<editor-fold desc="Upload Image via Firebase">
 
     /**
@@ -450,6 +477,7 @@ public class RestAPI {
     /**
      * -------------------------------MEETING--------------------------------
      */
+
     //<editor-fold desc="Create New Meeting In Project">
     /**
      *

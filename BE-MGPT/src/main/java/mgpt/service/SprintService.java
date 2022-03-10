@@ -138,6 +138,7 @@ public class SprintService {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Get Sprint Detail">
     public ResponseEntity<?> getSprintDetail(int sprintId) {
         try {
             Sprint sprint = sprintRepository.findBySprintId(sprintId);
@@ -188,7 +189,9 @@ public class SprintService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Review Sprint By Lecturer">
     public ResponseEntity<?> reviewSprintByLecturer(int sprintId, float score) throws Exception {
         try {
             Sprint sprint = sprintRepository.findBySprintId(sprintId);
@@ -204,4 +207,23 @@ public class SprintService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="update sprint review, set fireUrl to null">
+    public ResponseEntity<?> updateSprintReviewBySprintId(int sprintId) throws Exception {
+        try{
+            Sprint sprint=sprintRepository.findBySprintId(sprintId);
+            if(sprint!=null){
+                sprint.setFileUrl(null);
+                sprintRepository.save(sprint);
+                return ResponseEntity.ok(true);
+            } else
+                throw new Exception(Constant.INVALID_SPRINT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
 }
+
