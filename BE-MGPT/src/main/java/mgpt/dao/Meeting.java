@@ -14,6 +14,7 @@ import java.util.Date;
 @Table(name = "meeting")
 public class Meeting {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeting_id")
     private int meeting_id;
     @Column(name = "meeting_link")

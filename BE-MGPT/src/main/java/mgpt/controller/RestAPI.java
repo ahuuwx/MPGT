@@ -459,7 +459,7 @@ public class RestAPI {
      */
     @CrossOrigin
     @RequestMapping(value = "/meetings", method = RequestMethod.POST)
-    public ResponseEntity<?> createNewMeetingsInProject(@RequestParam HashMap<String, Object> reqBody) throws Exception {
+    public ResponseEntity<?> createNewMeetingsInProject(@RequestBody HashMap<String, String> reqBody) throws Exception {
         return meetingService.createNewMeetingsInProject(reqBody);
     }
     //</editor-fold>
