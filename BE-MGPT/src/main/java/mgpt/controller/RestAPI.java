@@ -224,7 +224,7 @@ public class RestAPI {
     @RequestMapping(value = "/leader-review-sprint", method = RequestMethod.POST)
 
     public ResponseEntity<?> uploadFileInSprintByLeader(@RequestParam(value = "file") List<MultipartFile> file,
-                                    @RequestParam(value = "sprintId") int sprintId) throws Exception {
+                                    @RequestParam int sprintId) throws Exception {
         return fireBaseService.uploadToThisMachineInSprint(file, sprintId);
     }
     //</editor-fold>

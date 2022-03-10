@@ -74,6 +74,11 @@ public class FireBaseService {
     //<editor-fold desc="upload file in sprint">
     public ResponseEntity<?> uploadToThisMachineInSprint(List<MultipartFile> fileUp, int sprintId) throws IOException, FirebaseAuthException {
         try {
+            Sprint sprint = sprintRepository.findBySprintId(sprintId);
+            if(sprint == null )
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(Constant.INVALID_SPRINT);
+
+
             //tạo sẵn thư mục uploads, r sau đó code lấy tới url của file
             Path currentRelativePath = Paths.get("uploads");
 
@@ -91,20 +96,16 @@ public class FireBaseService {
 
                 stringList.add(this.uploadFile(file, fileName));
                 file.delete();
-
-                Sprint sprint = sprintRepository.findBySprintId(sprintId);
-                sprint.setFileUrl(stringList.toString());
-                sprintRepository.save(sprint);
-            }
+                    sprint.setFileUrl(stringList.toString());
+                    sprintRepository.save(sprint);
+                }
 
             return ResponseEntity.ok(stringList);
         } catch (Exception e) {
-
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getCause());
         }
     }
     //</editor-fold>
-
 
     //<editor-fold desc="Upload File">
     private String uploadFile(File file, String fileName) throws IOException {
