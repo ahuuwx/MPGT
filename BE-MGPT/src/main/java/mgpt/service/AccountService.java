@@ -61,6 +61,7 @@ public class AccountService implements UserDetailsService {
             loginResponseDto.setName(account.getName());
             loginResponseDto.setUsername(account.getUsername());
             loginResponseDto.setRoleName(account.getRole().getRoleName());
+            loginResponseDto.setRoleId(account.getRole().getRoleId());
             loginResponseDto.setJwt(jwt);
             return ResponseEntity.ok(loginResponseDto);
         } catch (Exception e) {

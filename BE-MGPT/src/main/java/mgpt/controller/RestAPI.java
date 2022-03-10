@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -31,6 +32,8 @@ public class RestAPI {
     PermissionOfRoleService permissionOfRoleService;
     @Autowired
     FireBaseService fireBaseService;
+    @Autowired
+    MeetingService meetingService;
 
     /**
      * -------------------------------WELCOME--------------------------------
@@ -443,4 +446,22 @@ public class RestAPI {
         return fireBaseService.uploadToThisMachine(file, taskId);
     }
     //</editor-fold>
+
+    /**
+     * -------------------------------MEETING--------------------------------
+     */
+    //<editor-fold desc="Create New Meeting In Project">
+    /**
+     *
+     * @param reqBody
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/meetings", method = RequestMethod.POST)
+    public ResponseEntity<?> createNewMeetingsInProject(@RequestParam HashMap<String, Object> reqBody) throws Exception {
+        return meetingService.createNewMeetingsInProject(reqBody);
+    }
+    //</editor-fold>
+
 }
