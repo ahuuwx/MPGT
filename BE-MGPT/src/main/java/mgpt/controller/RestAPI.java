@@ -492,4 +492,22 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Update Meeting Link By Leader">
+    /**
+     *
+     * @param meetingId
+     * @param reqBody
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/meetings", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateMeetingLinkByLeader(@RequestParam int meetingId,
+                                                      @RequestBody HashMap<String,String> reqBody) throws Exception {
+        return meetingService.updateMeetingLinkByLeader(meetingId, reqBody);
+    }
+    //</editor-fold>
+
+
+
 }

@@ -60,4 +60,10 @@ public class Constant {
      */
     public static final String BUCKET_NAME = "mpgt-2022.appspot.com";
     public static final String PROJECT_ID = "mpgt-2022";
+    /**
+     * MEETING
+     */
+    public static final String MEETING_NOT_NULL = "MEETINGS IN PROJECT ARE NOT NULL, CAN NOT CREATE MORE MEETINGS";
+    public static final String INVALID_MEETING = "INVALID MEETING";
+    public static final String MEETING_LINK_NOT_NULL = "MEETING LINK IS NOT NULL";
 }

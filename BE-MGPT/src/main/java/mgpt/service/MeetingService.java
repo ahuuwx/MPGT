@@ -2,7 +2,6 @@ package mgpt.service;
 
 import mgpt.dao.Meeting;
 import mgpt.dao.Project;
-import mgpt.dao.Sprint;
 import mgpt.repository.MeetingRepository;
 import mgpt.repository.ProjectRepository;
 import mgpt.util.Constant;
@@ -20,6 +19,7 @@ public class MeetingService {
     MeetingRepository meetingRepository;
     @Autowired
     ProjectRepository projectRepository;
+
     //<editor-fold desc="Convert CN to 1">
     public String[] convertDowToInteger(String[] daysOfWeek) {
         String[] daysOfWeekCopy = new String[daysOfWeek.length];
@@ -41,9 +41,15 @@ public class MeetingService {
                 .anyMatch(dayOfWeek -> calendar.get(Calendar.DAY_OF_WEEK) == Integer.valueOf(dayOfWeek));
     }
     //</editor-fold>
+
+    //<editor-fold desc="Create New Meeting In Project">
     public ResponseEntity<?> createNewMeetingsInProject(HashMap<String,String> reqBody) throws Exception {
         try {
             int projectId= Integer.parseInt(reqBody.get("projectId"));
+            List<Meeting> meetings=meetingRepository.findAllByProject_ProjectId(projectId);
+            if(meetings != null){
+                throw new Exception(Constant.MEETING_NOT_NULL);
+            }
             Project project= projectRepository.findByProjectId(projectId);
             int slot= Integer.parseInt(reqBody.get("slot"));
             String timeStart=  reqBody.get("timeStart");
@@ -70,13 +76,13 @@ public class MeetingService {
                 calendar.add(Calendar.DATE, 1);
             }
 
-            // Insert information to Session
+            // insert data to meeting
             List<Meeting> meetingList;
             try {
                 meetingList = new ArrayList<>();
                 for (Date date : dateList) {
                     Meeting meeting = new Meeting();
-                    meeting.setMeeting_link(null);
+                    meeting.setMeetingLink(null);
                     meeting.setMeetingDate(date);
                     meeting.setMeetingTime(90);
                     meeting.setProject(project);
@@ -84,6 +90,7 @@ public class MeetingService {
                     meetingList.add(meeting);
                 }
                 meetingRepository.saveAll(meetingList);
+
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -94,4 +101,26 @@ public class MeetingService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Update Meeting Link">
+    public ResponseEntity<?> updateMeetingLinkByLeader(int meetingId, HashMap<String,String> reqBody) throws Exception {
+        try{
+            Meeting meeting=meetingRepository.findMeetingByMeetingId(meetingId);
+            String meetingLink=reqBody.get("meetingLink");
+            if(meetingLink.equals("")){
+                throw new Exception(Constant.MEETING_LINK_NOT_NULL);
+            }
+            if(meeting!=null){
+                meeting.setMeetingLink(meetingLink);
+                meetingRepository.save(meeting);
+                return ResponseEntity.ok(true);
+            } else
+                throw new Exception(Constant.INVALID_SPRINT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
 }

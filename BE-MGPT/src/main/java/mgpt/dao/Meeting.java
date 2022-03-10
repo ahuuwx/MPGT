@@ -16,9 +16,9 @@ public class Meeting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeting_id")
-    private int meeting_id;
+    private int meetingId;
     @Column(name = "meeting_link")
-    private String meeting_link;
+    private String meetingLink;
     @Column(name = "meeting_date")
     private Date meetingDate;
     @Column(name = "note")
