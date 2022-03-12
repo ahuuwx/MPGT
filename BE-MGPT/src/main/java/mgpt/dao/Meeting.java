@@ -3,6 +3,8 @@ package mgpt.dao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import mgpt.model.MeetingsResponseDto;
+import mgpt.util.Constant;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,4 +31,16 @@ public class Meeting {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    public MeetingsResponseDto convertToDto(){
+        MeetingsResponseDto dto = new MeetingsResponseDto();
+        dto.setMeetingId(meetingId);
+        dto.setMeetingLink(meetingLink);
+        dto.setMeetingDate(Constant.convertToUTC7TimeZone(meetingDate));
+        dto.setMeetingTime(meetingTime);
+        dto.setNote(note);
+        dto.setProjectId(project.getProjectId());
+
+        return dto;
+    }
 }

@@ -508,6 +508,34 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Get Meeting In Project">
+    /**
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/meetings", method = RequestMethod.GET)
+    public ResponseEntity<?> getMeetingsInProject(@RequestParam int projectId) throws Exception {
+        return meetingService.getMeetingsInProject(projectId);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Delete All Meeting">
+
+    /**
+     *
+     * @param projectId
+     * @return
+     * @throws Exception
+     */
+    @CrossOrigin
+    @RequestMapping(value = "/meetings", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteAllMeetingInProject(@RequestParam int projectId) throws Exception {
+        return meetingService.deleteAllMeetingsInProject(projectId);
+    }
+    //</editor-fold>
+
 
 
 }

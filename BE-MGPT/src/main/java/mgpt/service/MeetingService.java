@@ -1,7 +1,10 @@
 package mgpt.service;
 
+import mgpt.dao.Account;
 import mgpt.dao.Meeting;
 import mgpt.dao.Project;
+import mgpt.dao.Task;
+import mgpt.model.MeetingsResponseDto;
 import mgpt.repository.MeetingRepository;
 import mgpt.repository.ProjectRepository;
 import mgpt.util.Constant;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,7 +51,8 @@ public class MeetingService {
         try {
             int projectId= Integer.parseInt(reqBody.get("projectId"));
             List<Meeting> meetings=meetingRepository.findAllByProject_ProjectId(projectId);
-            if(meetings != null){
+            //kiem tra trong prj nếu ko có meeting thì mới dc tạo cái mới
+            if(meetings.size()!=0){
                 throw new Exception(Constant.MEETING_NOT_NULL);
             }
             Project project= projectRepository.findByProjectId(projectId);
@@ -117,6 +122,31 @@ public class MeetingService {
                 return ResponseEntity.ok(true);
             } else
                 throw new Exception(Constant.INVALID_SPRINT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Get Meeting In Projects">
+    public ResponseEntity<?> getMeetingsInProject(int projectId) {
+        List<Meeting> meetings=meetingRepository.findAllByProject_ProjectId(projectId);
+        List<MeetingsResponseDto> dtos= meetings.stream().map(meeting -> meeting.convertToDto()).collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Delete All Meetings In Project">
+    public ResponseEntity<?> deleteAllMeetingsInProject(int projectId) {
+        try {
+            List<Meeting> meetingList=meetingRepository.findAllByProject_ProjectId(projectId);
+            if (meetingList.size()==0) {
+                throw new  Exception(Constant.MEETING_NULL);
+            } else {
+                meetingRepository.deleteAllInBatch(meetingList);
+                return ResponseEntity.ok(Boolean.TRUE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

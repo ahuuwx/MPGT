@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import mgpt.model.ProjectDetailResponseDto;
 import mgpt.model.ProjectListResponseDto;
+import mgpt.util.Constant;
 
 import javax.persistence.*;
 import java.util.Date;

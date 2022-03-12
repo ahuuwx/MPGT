@@ -1,5 +1,9 @@
 package mgpt.util;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
+
 public class Constant {
     /**
      * JWT
@@ -66,4 +70,16 @@ public class Constant {
     public static final String MEETING_NOT_NULL = "MEETINGS IN PROJECT ARE NOT NULL, CAN NOT CREATE MORE MEETINGS";
     public static final String INVALID_MEETING = "INVALID MEETING";
     public static final String MEETING_LINK_NOT_NULL = "MEETING LINK IS NOT NULL";
+    public static final String MEETING_NULL = "MEETING IS NULL";
+    /**
+     * Conversion
+     */
+    public static final long PLUS_HOUR_FROM_UTC_TO_UTC7 = 7;
+    // <editor-fold desc="Convert to UTC+7 TimeZone">
+    public static Date convertToUTC7TimeZone(Date insDate) {
+        ZonedDateTime date = ZonedDateTime.ofInstant(insDate.toInstant(), ZoneId.of(TIMEZONE))
+                .plusHours(PLUS_HOUR_FROM_UTC_TO_UTC7);
+        return Date.from(date.toInstant());
+    }
+    // </editor-fold>
 }
