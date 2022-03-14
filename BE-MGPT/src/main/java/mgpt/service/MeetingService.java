@@ -110,62 +110,74 @@ public class MeetingService {
 
     //<editor-fold desc="Update Meeting Link">
     public ResponseEntity<?> updateMeetingLinkByLeader(int meetingId, HashMap<String,String> reqBody) throws Exception {
-        try {
-            Meeting currentMeeting = meetingRepository.findMeetingByMeetingId(meetingId);
-            if (currentMeeting == null)
-                throw new Exception(Constant.INVALID_MEETING);
-
-            String meetingLink = reqBody.get("meetingLink");
-            String note = reqBody.get("note");
-            int projectId = Integer.parseInt(reqBody.get("projectId"));
-
-
-
-            List<Meeting> meetings = meetingRepository.findAllByProject_ProjectId(projectId);
-            int currentMeetingPos = meetings.indexOf(currentMeeting);
-            ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
-            ZonedDateTime today = ZonedDateTime.now(zoneId);
-            Date currentDateTime = Date.from(today.toInstant());
-            Date currentMeetingDateTime = currentMeeting.getMeetingDate();
-
-
-
-            if (currentMeetingPos==0) {
-                //thì current pos là vị trí đầu tiên,TH 1 chưa tới thời điểm để note, có thể cập nhật link
-                if (currentDateTime.before(currentMeetingDateTime) || currentDateTime.equals(currentMeetingDateTime)) {
-                    if (meetingLink.equals(""))
-                        throw new Exception(Constant.MEETING_LINK_NOT_NULL);
-                    currentMeeting.setMeetingLink(meetingLink);
-                    meetingRepository.save(currentMeeting);
+            try{
+                Meeting meeting=meetingRepository.findMeetingByMeetingId(meetingId);
+                String meetingLink=reqBody.get("meetingLink");
+                if(meetingLink.equals("")){
+                    throw new Exception(Constant.MEETING_LINK_NOT_NULL);
+                }
+                if(meeting!=null){
+                    meeting.setMeetingLink(meetingLink);
+                    meetingRepository.save(meeting);
+                    return ResponseEntity.ok(true);
                 } else
-                //hiện tại đã sau thời gian meet, cho ngta note
-                {
-                    currentMeeting.setNote(note);
-                    currentMeeting.setIsNote(true);
-                    meetingRepository.save(currentMeeting);
-                }
-            }else{
-                //currentMeeting ở giữa hoặc về sau
-                //thứ nhất kiểm tra xem cái meet ở trước dc note chưa
-                Meeting preMeeting = meetings.get(currentMeetingPos - 1);
-                if(preMeeting.isNote()==false){
-                    throw new Exception("Chưa có note meet ở trước kìa");
-                }
-                //nếu mà note r
-                //thì kiểm tra, là bây giờ đã qua thời gian chưa, dc note chưa
-                //th 1 chưa tới thời điểm meet, thì có thể dc cập nhật link
-                if (currentDateTime.before(currentMeetingDateTime) || currentDateTime.equals(currentMeetingDateTime)) {
-                    if (meetingLink.equals(""))
-                        throw new Exception(Constant.MEETING_LINK_NOT_NULL);
-                    currentMeeting.setMeetingLink(meetingLink);
-                    meetingRepository.save(currentMeeting);
+                    throw new Exception(Constant.INVALID_SPRINT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Update Note By Leader">
+    public ResponseEntity<?> updateNoteByLeader(int meetingId, HashMap<String,String> reqBody) throws Exception {
+            try {
+                Meeting currentMeeting = meetingRepository.findMeetingByMeetingId(meetingId);
+                if (currentMeeting == null)
+                    throw new Exception(Constant.INVALID_MEETING);
+
+                String note = reqBody.get("note");
+                if(note == "")
+                    throw new Exception(Constant.MEETING_NOTE_NULL);
+                int projectId = Integer.parseInt(reqBody.get("projectId"));
+                List<Meeting> meetings = meetingRepository.findAllByProject_ProjectId(projectId);
+                int currentMeetingPos = meetings.indexOf(currentMeeting);
+                ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
+                ZonedDateTime today = ZonedDateTime.now(zoneId);
+                Date currentDateTime = Date.from(today.toInstant());
+                Date currentMeetingDateTime = currentMeeting.getMeetingDate();
+
+                if (currentMeetingPos==0) {
+                    //thì current pos là vị trí đầu tiên,TH 1 chưa tới thời điểm để note
+                    if (currentDateTime.before(currentMeetingDateTime) || currentDateTime.equals(currentMeetingDateTime)) {
+                        throw new Exception(Constant.MEETING_NOTE_CAN_NOT_BE_UPDATE_DATE_BEFORE);
+                    } else
+                    //hiện tại đã sau thời gian meet, cho ngta note
+                    //và sẽ isNote của meeting này thành true
+                    {
+                        currentMeeting.setNote(note);
+                        currentMeeting.setIsNote(true);
+                        meetingRepository.save(currentMeeting);
+                    }
                 }else{
-                    currentMeeting.setNote(note);
-                    currentMeeting.setIsNote(true);
-                    meetingRepository.save(currentMeeting);
+                    //currentMeeting ở giữa hoặc về sau
+                    //thứ nhất kiểm tra xem cái meet ở trước dc note chưa
+                    Meeting preMeeting = meetings.get(currentMeetingPos - 1);
+                    if(preMeeting.isNote()==false){
+                        throw new Exception(Constant.MEETING_NOTE_HAS_NOT_UPDATE_IN_PRE_MEETING);
+                    }
+                    //nếu mà note r
+                    //thì kiểm tra, là bây giờ đã qua thời gian chưa, dc note chưa
+                    //th 1 chưa tới thời điểm meet, thì có thể dc cập nhật link
+                    if (currentDateTime.before(currentMeetingDateTime) || currentDateTime.equals(currentMeetingDateTime)) {
+                        throw new Exception(Constant.MEETING_NOTE_CAN_NOT_BE_UPDATE_DATE_BEFORE);
+                    }else{
+                        currentMeeting.setNote(note);
+                        currentMeeting.setIsNote(true);
+                        meetingRepository.save(currentMeeting);
+                    }
                 }
-            }
-            return ResponseEntity.ok(true);
+                return ResponseEntity.ok(true);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

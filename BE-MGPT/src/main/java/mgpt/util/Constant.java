@@ -75,6 +75,9 @@ public class Constant {
     public static final String INVALID_MEETING = "INVALID MEETING";
     public static final String MEETING_LINK_NOT_NULL = "MEETING LINK IS NOT NULL";
     public static final String MEETING_NULL = "MEETING IS NULL";
+    public static final String MEETING_NOTE_NULL="MEETING NOTE CAN NOT BE NULL";
+    public static final String MEETING_NOTE_CAN_NOT_BE_UPDATE_DATE_BEFORE = "CAN NOT UPDATE MEETING NOTE BECAUSE THE MEETING HAS NOT OCCURRED";
+    public static final String MEETING_NOTE_HAS_NOT_UPDATE_IN_PRE_MEETING="YOU HAVEN'T UPDATE THE NOTE IN THIS PREVIOUS MEETING";
     /**
      * Conversion
      */
