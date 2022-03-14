@@ -27,6 +27,16 @@ public class Meeting {
     private String note;
     @Column(name = "meeting_time")
     private int meetingTime;
+    @Column(name = "is_note")
+    private boolean isNote;
+
+    public boolean isNote() {
+        return isNote;
+    }
+
+    public void setIsNote(boolean note) {
+        isNote = note;
+    }
 
     @ManyToOne
     @JoinColumn(name = "project_id")

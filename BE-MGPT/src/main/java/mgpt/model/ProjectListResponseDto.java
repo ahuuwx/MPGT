@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -14,5 +15,7 @@ public class ProjectListResponseDto {
     private String projectName;
     private String leaderName;
     private int semester;
+    private Date startDate;
+    private Date endDate;
     private List<String> lecturerName;
 }

@@ -1,5 +1,9 @@
 package mgpt.util;
 
+import lombok.SneakyThrows;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -75,6 +79,7 @@ public class Constant {
      * Conversion
      */
     public static final long PLUS_HOUR_FROM_UTC_TO_UTC7 = 7;
+
     // <editor-fold desc="Convert to UTC+7 TimeZone">
     public static Date convertToUTC7TimeZone(Date insDate) {
         ZonedDateTime date = ZonedDateTime.ofInstant(insDate.toInstant(), ZoneId.of(TIMEZONE))
@@ -82,4 +87,5 @@ public class Constant {
         return Date.from(date.toInstant());
     }
     // </editor-fold>
+
 }

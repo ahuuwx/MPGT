@@ -50,6 +50,8 @@ public class Project {
         projectListResponseDto.setProjectId(projectId);
         projectListResponseDto.setProjectName(projectName);
         projectListResponseDto.setSemester(semester);
+        projectListResponseDto.setStartDate(startDate);
+        projectListResponseDto.setEndDate(endDate);
         return projectListResponseDto;
     }
     // </editor-fold>
