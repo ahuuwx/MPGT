@@ -5,7 +5,6 @@ import mgpt.dao.Project;
 import mgpt.dao.ProjectOfUser;
 import mgpt.model.ProjectDetailResponseDto;
 import mgpt.model.ProjectListResponseDto;
-import mgpt.model.ProjectListSearchByDateDto;
 import mgpt.repository.AccountRepository;
 import mgpt.repository.ProjectOfUserRepository;
 import mgpt.repository.ProjectRepository;
@@ -15,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -134,14 +135,27 @@ public class ProjectService {
     //</editor-fold>
 
     //<editor-fold desc="Get Prject By Date">
-    public ResponseEntity<?> getProjectByDate(ProjectListSearchByDateDto dto, String username) {
+    public ResponseEntity<?> getProjectByDate(String date1, String date2, String username) {
         try {
             Account account = accountRepository.findAccountByUsername(username);
+
+
             if (account.getRole().getRoleName().matches(Constant.LECTURER_ROLE_NAME)) {
-                if (dto.getStartDate().after(dto.getEndDate())) {
-                    throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
+                List<ProjectOfUser> projectOfUserList;
+                if (date1 == "" && date2 == "") {
+                    projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_Username(username);
                 }
-                List<ProjectOfUser> projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(username, dto.getStartDate(), dto.getEndDate());
+                //hoặc get by Date
+                else {
+                    Date startDate = new SimpleDateFormat(Constant.DATE_PATTERN).parse(date1);
+                    Date endDate = new SimpleDateFormat(Constant.DATE_PATTERN).parse(date2);
+                    if (startDate.after(endDate)) {
+                        throw new Exception(Constant.INVALID_STARTDATE_ENDDATE);
+                    }
+                    projectOfUserList = projectOfUserRepository.findProjectOfUserByUsername_UsernameAndProject_StartDateBetween(username, startDate, endDate);
+                }
+
+
                 List<Project> projectList = projectRepository.findProjectsByProjectOfUserListIsIn(projectOfUserList);
                 List<ProjectListResponseDto> projectListResponseDto = projectList.stream().map(project -> project.convertToProjectDto()).collect(Collectors.toList());
                 for (ProjectListResponseDto projectListResponseDto1 : projectListResponseDto) {

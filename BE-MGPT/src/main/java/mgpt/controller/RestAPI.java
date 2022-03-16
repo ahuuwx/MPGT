@@ -142,19 +142,22 @@ public class RestAPI {
 
     //<editor-fold desc="Get Project By Date">
 
+
     /**
      *
-     * @param dto
      * @param username
+     * @param startDate
+     * @param endDate
      * @return
      * @throws Exception
      */
     @CrossOrigin
-        @RequestMapping(value = "/project", method = RequestMethod.GET)
-        public ResponseEntity<?> getProjectByDate(@RequestBody ProjectListSearchByDateDto dto,
-                                                  @RequestParam(value = "username") String username) throws Exception {
-            return projectService.getProjectByDate(dto,username);
-        }
+    @RequestMapping(value = "/project", method = RequestMethod.GET)
+    public ResponseEntity<?> getProjectByDate(@RequestParam(value = "username") String username,
+                                              @RequestParam(value = "startDate") String startDate,
+                                              @RequestParam(value = "endDate") String endDate) throws Exception {
+        return projectService.getProjectByDate(startDate, endDate, username);
+    }
     //</editor-fold>
 
     /**
