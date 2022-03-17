@@ -54,9 +54,11 @@ public class Task {
         taskSummaryInSprintResponseDto.setStatusId(statusId.getStatusId());
         if (assigneeUsername == null) {
             taskSummaryInSprintResponseDto.setAssigneeUsername(null);
+            taskSummaryInSprintResponseDto.setAvatar(null);
             taskSummaryInSprintResponseDto.setAssigneeName(null);
         } else {
             taskSummaryInSprintResponseDto.setAssigneeUsername(assigneeUsername.getUsername());
+            taskSummaryInSprintResponseDto.setAvatar(assigneeUsername.getAvatar());
             taskSummaryInSprintResponseDto.setAssigneeName(assigneeUsername.getName());
         }
         return taskSummaryInSprintResponseDto;

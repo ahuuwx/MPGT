@@ -12,5 +12,6 @@ public class TaskSummaryInSprintResponseDto {
     private String taskName;
     private int statusId;
     private String assigneeUsername;
+    private String avatar;
     private String assigneeName;
 }
