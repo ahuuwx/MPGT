@@ -123,7 +123,7 @@ public class SprintService {
                 Sprint delSprint = sprintRepository.findBySprintId(sprintId);
                 List<Task> taskList = taskRepository.findAllBySprintId_SprintId(sprintId);
                 String backlog="Backlog";
-                Sprint backlogSprint=sprintRepository.findBySprintNameIsLike(backlog);
+                Sprint backlogSprint=sprintRepository.findBySprintNameIsLikeAndProjectId_ProjectId(backlog, delSprint.getProjectId().getProjectId());
                 for (Task task : taskList) {
 
                     task.setSprintId(backlogSprint);

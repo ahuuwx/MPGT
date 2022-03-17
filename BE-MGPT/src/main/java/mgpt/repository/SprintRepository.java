@@ -12,5 +12,5 @@ public interface SprintRepository extends JpaRepository<Sprint, Integer> {
 
     Sprint findBySprintId(int sprintId);
 
-    Sprint findBySprintNameIsLike(String sprintName);
+    Sprint findBySprintNameIsLikeAndProjectId_ProjectId(String sprintName, int projectId);
 }
