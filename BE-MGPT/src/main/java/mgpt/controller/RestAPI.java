@@ -511,12 +511,14 @@ public class RestAPI {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Update Meeting Note">
     @CrossOrigin
     @RequestMapping(value = "/meeting-note", method = RequestMethod.PUT)
     public ResponseEntity<?> updateMeetingNoteByLeader(@RequestParam int meetingId,
                                                        @RequestBody HashMap<String,String> reqBody) throws Exception {
         return meetingService.updateNoteByLeader(meetingId, reqBody);
     }
+    //</editor-fold>
 
     //<editor-fold desc="Get Meeting In Project">
     /**

@@ -12,5 +12,6 @@ import java.util.Date;
 public class SprintUpdatingRequestDto {
     private String sprintName;
     private Date startDate;
-    private int duration;   
+    private int duration;
+    private String reason;
 }

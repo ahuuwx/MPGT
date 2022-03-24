@@ -29,6 +29,9 @@ public class Sprint {
     private float score;
     @Column(name = "file_url")
     private String fileUrl;
+    @Column(name = "update_reason")
+    private String reason;
+
 
     @ManyToOne
     @JoinColumn(name = "project_id")

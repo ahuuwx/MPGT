@@ -91,6 +91,8 @@ public class SprintService {
             ZonedDateTime today = ZonedDateTime.now(zoneId);
             if(updateSprint.getSprintName()==null||updateSprint.getSprintName().matches(""))
                 throw new Exception(Constant.NULL_SPRINT_NAME);
+            if(updateSprint.getReason()==null)
+                throw new Exception(Constant.NULL_UPDATE_SPRINT_REASON);
             if(sprint!=null){
                 sprint.setSprintName(updateSprint.getSprintName());
                 //nếu ko update ngày, lúc vừa create xong (date vẫn null, tự động set ngày)
@@ -101,6 +103,7 @@ public class SprintService {
                     sprint.setStartDate(updateSprint.getStartDate());
                     sprint.setEndDate(convertToTimeEnd(updateSprint.getStartDate(), updateSprint.getDuration()));
                 }
+                sprint.setReason(updateSprint.getReason());
                 sprintRepository.save(sprint);
                 return ResponseEntity.ok(true);
             } else
