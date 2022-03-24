@@ -515,8 +515,8 @@ public class RestAPI {
     @CrossOrigin
     @RequestMapping(value = "/meeting-note", method = RequestMethod.PUT)
     public ResponseEntity<?> updateMeetingNoteByLeader(@RequestParam int meetingId,
-                                                       @RequestBody HashMap<String,String> reqBody) throws Exception {
-        return meetingService.updateNoteByLeader(meetingId, reqBody);
+                                                       @RequestParam List<MultipartFile> file ) throws Exception {
+        return meetingService.updateNoteByLeader(meetingId, file);
     }
     //</editor-fold>
 

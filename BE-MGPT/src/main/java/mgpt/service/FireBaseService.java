@@ -6,8 +6,10 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.google.firebase.auth.FirebaseAuthException;
+import mgpt.dao.Meeting;
 import mgpt.dao.Sprint;
 import mgpt.dao.Task;
+import mgpt.repository.MeetingRepository;
 import mgpt.repository.SprintRepository;
 import mgpt.repository.TaskRepository;
 import mgpt.util.Constant;
@@ -35,6 +37,8 @@ public class FireBaseService {
     TaskRepository taskRepository;
     @Autowired
     SprintRepository sprintRepository;
+    @Autowired
+    MeetingRepository meetingRepository;
 
     //<editor-fold desc="Upload file in task">
     //luu file tu post man ve may
@@ -104,6 +108,34 @@ public class FireBaseService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getCause());
         }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="upload file in Meeting">
+    public List<String> uploadToThisMachineInMeeting(List<MultipartFile> fileUp) throws IOException, FirebaseAuthException {
+
+            //tạo sẵn thư mục uploads, r sau đó code lấy tới url của file
+            Path currentRelativePath = Paths.get("uploads");
+
+            String s = currentRelativePath.toAbsolutePath().toString();
+            List<String> stringList = new ArrayList<>();
+            //de luu file voi root va ten file
+            for (MultipartFile multipartFile : fileUp) {
+                String root = s + "\\" + multipartFile.getOriginalFilename();
+                String fileName = multipartFile.getOriginalFilename();
+
+                //chuyen tu multipartFile qua file
+                multipartFile = new org.springframework.mock.web.MockMultipartFile(String.valueOf(fileUp), multipartFile.getBytes());
+                File file = new File(root, multipartFile.getOriginalFilename());
+                multipartFile.transferTo(file);
+
+                stringList.add(this.uploadFile(file, fileName));
+                file.delete();
+
+            }
+
+            return stringList;
+
     }
     //</editor-fold>
 

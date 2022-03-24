@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -128,18 +129,19 @@ public class MeetingService {
         }
     }
     //</editor-fold>
-
+    @Autowired
+    FireBaseService fireBaseService;
     //<editor-fold desc="Update Note By Leader">
-    public ResponseEntity<?> updateNoteByLeader(int meetingId, HashMap<String,String> reqBody) throws Exception {
+    public ResponseEntity<?> updateNoteByLeader(int meetingId, List<MultipartFile> fileUp) throws Exception {
             try {
                 Meeting currentMeeting = meetingRepository.findMeetingByMeetingId(meetingId);
                 if (currentMeeting == null)
                     throw new Exception(Constant.INVALID_MEETING);
 
-                String note = reqBody.get("note");
+                String note = String.valueOf(fireBaseService.uploadToThisMachineInMeeting(fileUp));
                 if(note == "")
                     throw new Exception(Constant.MEETING_NOTE_NULL);
-                int projectId = Integer.parseInt(reqBody.get("projectId"));
+                int projectId = currentMeeting.getProject().getProjectId();
                 List<Meeting> meetings = meetingRepository.findAllByProject_ProjectId(projectId);
                 int currentMeetingPos = meetings.indexOf(currentMeeting);
                 ZoneId zoneId = ZoneId.of(Constant.TIMEZONE);
@@ -155,7 +157,7 @@ public class MeetingService {
                     //hiện tại đã sau thời gian meet, cho ngta note
                     //và sẽ isNote của meeting này thành true
                     {
-                        currentMeeting.setNote(note);
+                        currentMeeting.setFileUrl(note);
                         currentMeeting.setIsNote(true);
                         meetingRepository.save(currentMeeting);
                     }
@@ -163,7 +165,7 @@ public class MeetingService {
                     //currentMeeting ở giữa hoặc về sau
                     //thứ nhất kiểm tra xem cái meet ở trước dc note chưa
                     Meeting preMeeting = meetings.get(currentMeetingPos - 1);
-                    if(preMeeting.isNote()==false){
+                    if(!preMeeting.isNote()){
                         throw new Exception(Constant.MEETING_NOTE_HAS_NOT_UPDATE_IN_PRE_MEETING);
                     }
                     //nếu mà note r
@@ -172,7 +174,7 @@ public class MeetingService {
                     if (currentDateTime.before(currentMeetingDateTime) || currentDateTime.equals(currentMeetingDateTime)) {
                         throw new Exception(Constant.MEETING_NOTE_CAN_NOT_BE_UPDATE_DATE_BEFORE);
                     }else{
-                        currentMeeting.setNote(note);
+                        currentMeeting.setFileUrl(note);
                         currentMeeting.setIsNote(true);
                         meetingRepository.save(currentMeeting);
                     }

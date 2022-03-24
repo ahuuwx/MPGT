@@ -23,8 +23,8 @@ public class Meeting {
     private String meetingLink;
     @Column(name = "meeting_date")
     private Date meetingDate;
-    @Column(name = "note")
-    private String note;
+    @Column(name = "file_url")
+    private String fileUrl;
     @Column(name = "meeting_time")
     private int meetingTime;
     @Column(name = "is_note")
@@ -48,7 +48,7 @@ public class Meeting {
         dto.setMeetingLink(meetingLink);
         dto.setMeetingDate(Constant.convertToUTC7TimeZone(meetingDate));
         dto.setMeetingTime(meetingTime);
-        dto.setNote(note);
+        dto.setNote(fileUrl);
         dto.setProjectId(project.getProjectId());
 
         return dto;
