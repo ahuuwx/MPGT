@@ -179,6 +179,8 @@ public class TaskService {
                 throw new IllegalArgumentException(Constant.INVALID_TASKID);
             } else {
                 Task delTask = taskRepository.findByTaskId(taskId);
+                List<TaskComment> taskCommentList=taskCommentRepository.findAllByTask_TaskId(delTask.getTaskId());
+                taskCommentRepository.deleteAll(taskCommentList);
                 taskRepository.delete(delTask);
                 return ResponseEntity.ok(Boolean.TRUE);
             }
