@@ -17,5 +17,6 @@ public class SprintListResponseDto {
     private Date endDate;
     private String fileUrl;
     private float score;
+    private String reason;
     private List<TaskSummaryInSprintResponseDto> taskList;
 }

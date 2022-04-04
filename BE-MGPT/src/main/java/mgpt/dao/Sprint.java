@@ -46,6 +46,7 @@ public class Sprint {
         sprintListResponseDto.setEndDate(endDate);
         sprintListResponseDto.setFileUrl(fileUrl);
         sprintListResponseDto.setScore(score);
+        sprintListResponseDto.setReason(reason);
         return sprintListResponseDto;
     }
     //</editor-fold>
