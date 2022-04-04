@@ -124,14 +124,17 @@ public class SprintService {
                 throw new IllegalArgumentException(Constant.INVALID_TASKID);
             } else {
                 Sprint delSprint = sprintRepository.findBySprintId(sprintId);
-                List<Task> taskList = taskRepository.findAllBySprintId_SprintId(sprintId);
-                String backlog="Backlog";
-                Sprint backlogSprint=sprintRepository.findBySprintNameIsLikeAndProjectId_ProjectId(backlog, delSprint.getProjectId().getProjectId());
-                for (Task task : taskList) {
+                if(!delSprint.getSprintName().equals("Backlog")) {
+                    List<Task> taskList = taskRepository.findAllBySprintId_SprintId(sprintId);
+                    String backlog = "Backlog";
+                    Sprint backlogSprint = sprintRepository.findBySprintNameIsLikeAndProjectId_ProjectId(backlog, delSprint.getProjectId().getProjectId());
+                    for (Task task : taskList) {
 
-                    task.setSprintId(backlogSprint);
-                }
-                sprintRepository.delete(delSprint);
+                        task.setSprintId(backlogSprint);
+                    }
+                    sprintRepository.delete(delSprint);
+                }else
+                    throw new Exception("CAN NOT DELETE SPRINT BACKLOG");
                 return ResponseEntity.ok(Boolean.TRUE);
             }
         } catch (Exception e) {
