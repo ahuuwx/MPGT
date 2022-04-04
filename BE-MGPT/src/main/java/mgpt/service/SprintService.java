@@ -68,7 +68,7 @@ public class SprintService {
             if (project != null) {
                 Sprint sprint = new Sprint();
                 List<Sprint> sprintList=sprintRepository.findAllByProjectId_ProjectId(projectId);
-                int countSprint=sprintList.size()+1;
+                int countSprint=sprintList.size();
                 sprint.setSprintName(project.getProjectName()+" Sprint "+countSprint);
                 sprint.setProjectId(project);
                 sprintRepository.save(sprint);
